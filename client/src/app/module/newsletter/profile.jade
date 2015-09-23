@@ -1,0 +1,107 @@
+.wrapper
+  section.container-fluid
+
+    .row
+      .section-block.col-md-12.textarea
+        section
+          header
+            h2.title
+              span.text Newsletter
+          .col-xs-12.text-right.funcbar
+            a.btn.btn-primary.btn-wider(
+            href='#/edit_post/new'
+            ) 新建文章
+
+            a.btn.btn-primary.btn-wider(
+            href='#/profile'
+            ) 信息设置
+
+            a.btn.btn-primary.btn-wider(
+            href='#/posts'
+            ) 文章管理
+
+            include ../user/logout
+
+    .row
+      div
+      .section-block.col-md-8.col-md-offset-2.textarea
+        section
+          header
+            h3.title SMTP设置
+          form(
+          name="form"
+          novalidate
+          )
+            fieldset.form-group
+              label host
+              input.form-control(
+              type="text"
+              name="host"
+              ng-model="profile.host"
+              placeholder="host"
+              required=""
+              )
+              div(
+              ng-show="form.$submitted || form.host.$touched"
+              )
+                .error(ng-show="form.host.$error.required")
+                  i.ico-x.errorico
+                  span.text Required!
+            fieldset.form-group
+              label port
+              input.form-control(
+              type="number"
+              name="port"
+              ng-model="profile.port"
+              placeholder="port"
+              required=""
+              )
+              div(
+              ng-show="form.$submitted || form.port.$touched"
+              )
+                .error(ng-show="form.port.$error.required")
+                  i.ico-x.errorico
+                  span.text Required!
+            fieldset.form-group
+              label username
+              input.form-control(
+              type="text"
+              name="username"
+              ng-model="profile.username"
+              placeholder="username"
+              required
+              )
+              div(
+              ng-show="form.$submitted || form.username.$touched"
+              )
+                .error(ng-show="form.username.$error.required")
+                  i.ico-x.errorico
+                  span.text Required!
+            fieldset.form-group
+              label password
+              input.form-control(
+              type="password"
+              name="password"
+              ng-model="profile.passwd"
+              placeholder="password"
+              required
+              )
+              div(
+              ng-show="form.$submitted || form.password.$touched"
+              )
+                .error(ng-show="form.password.$error.required")
+                  i.ico-x.errorico
+                  span.text Required!
+            .checkbox
+              label
+                input(
+                type="checkbox"
+                name="use_tls"
+                ng-model="profile.use_tls"
+                ng-checked="profile.use_tls")
+                | 使用TLS
+          footer
+            button.btn.btn-primary.btn-wider(
+            ng-click="update_profile()"
+            )
+              | 确认

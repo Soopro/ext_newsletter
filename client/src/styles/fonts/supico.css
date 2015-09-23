@@ -1,0 +1,334 @@
+/*
+-----------------------------------------------
+Sup ico set
+http://www.soopro.io
+
+Author:   redy
+Date:     2 dec 2014
+Version: 1.1
+----------------------------------------------- */
+
+@font-face {
+  font-family: 'supico';
+  src: url('supico.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="ico-"],
+[class*=" ico-"],
+.ico {
+  font-family: 'supico';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  font-size: 16px;
+  line-height:1em;
+  text-align: center;
+  vertical-align: middle;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ico-lg {
+  font-size: 25px;
+  line-height: 0.90em;
+  vertical-align: middle;
+}
+
+.ico-2x {
+  font-size: 35px;
+}
+
+.ico-3x {
+  font-size: 50px;
+}
+
+.ico-4x {
+  font-size: 100px;
+}
+
+.ico-border {
+  padding: .2em .25em .15em;
+  border: solid 0.08em #eeeeee;
+  border-radius: .1em;
+}
+
+.pull-right {
+  float: right;
+}
+
+.pull-left {
+  float: left;
+}
+
+.ico.pull-left {
+  margin-right: .3em;
+}
+
+.ico.pull-right {
+  margin-left: .3em;
+}
+
+.ico-spin {
+  -webkit-animation: spin 2s infinite linear;
+  -moz-animation: spin 2s infinite linear;
+  -o-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+}
+
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+  }
+}
+
+@-o-keyframes spin {
+  0% {
+    -o-transform: rotate(0deg);
+  }
+  100% {
+    -o-transform: rotate(359deg);
+  }
+}
+
+@-ms-keyframes spin {
+  0% {
+    -ms-transform: rotate(0deg);
+  }
+  100% {
+    -ms-transform: rotate(359deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
+.ico-rotate-90 {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+.ico-rotate-180 {
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+
+.ico-rotate-270 {
+  -webkit-transform: rotate(270deg);
+  -moz-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  -o-transform: rotate(270deg);
+  transform: rotate(270deg);
+}
+
+.ico-flip-horizontal {
+  -webkit-transform: scale(-1, 1);
+  -moz-transform: scale(-1, 1);
+  -ms-transform: scale(-1, 1);
+  -o-transform: scale(-1, 1);
+  transform: scale(-1, 1);
+}
+
+.ico-flip-vertical {
+  -webkit-transform: scale(1, -1);
+  -moz-transform: scale(1, -1);
+  -ms-transform: scale(1, -1);
+  -o-transform: scale(1, -1);
+  transform: scale(1, -1);
+}
+
+.ico-stack {
+  position: relative;
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  line-height: 2em;
+  vertical-align: middle;
+}
+
+.ico-stack-1x,
+.ico-stack-2x {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.ico-stack-1x {
+  line-height: inherit;
+}
+
+.ico-stack-2x {
+  font-size: 2em;
+}
+
+/* icons */
+.ico-logo:before {
+	content: "\e600";
+}
+.ico-arrow-down:before {
+	content: "\e601";
+}
+.ico-arrow-left:before {
+	content: "\e602";
+}
+.ico-arrow-right:before {
+	content: "\e603";
+}
+.ico-arrow-up:before {
+	content: "\e604";
+}
+.ico-bell:before {
+	content: "\e605";
+}
+.ico-broadcast:before {
+	content: "\e606";
+}
+.ico-checked:before {
+	content: "\e607";
+}
+.ico-copy:before {
+	content: "\e608";
+}
+.ico-dashboard:before {
+	content: "\e609";
+}
+.ico-enter:before {
+	content: "\e60a";
+}
+.ico-media:before {
+	content: "\e60c";
+}
+.ico-menu:before {
+	content: "\e60d";
+}
+.ico-message:before {
+	content: "\e60e";
+}
+.ico-minus:before {
+	content: "\e60f";
+}
+.ico-paper-o:before {
+	content: "\e610";
+}
+.ico-pen:before {
+	content: "\e611";
+}
+.ico-plus:before {
+	content: "\e612";
+}
+.ico-record:before {
+	content: "\e613";
+}
+.ico-add:before {
+	content: "\e614";
+}
+.ico-remove:before {
+	content: "\e615";
+}
+.ico-response:before {
+	content: "\e616";
+}
+.ico-sbag:before {
+	content: "\e617";
+}
+.ico-selected:before {
+	content: "\e618";
+}
+.ico-star:before {
+	content: "\e619";
+}
+.ico-sync:before {
+	content: "\e61a";
+}
+.ico-trash-o:before {
+	content: "\e61b";
+}
+.ico-trash:before {
+	content: "\e61c";
+}
+.ico-turn-left:before {
+	content: "\e61d";
+}
+.ico-turn-right:before {
+	content: "\e61e";
+}
+.ico-upload:before {
+	content: "\e61f";
+}
+.ico-user_man:before {
+	content: "\e620";
+}
+.ico-user:before {
+	content: "\e621";
+}
+.ico-users:before {
+	content: "\e622";
+}
+.ico-visa:before {
+	content: "\e623";
+}
+.ico-wechat:before {
+	content: "\e624";
+}
+.ico-x:before {
+	content: "\e625";
+}
+.ico-app:before {
+	content: "\e626";
+}
+.ico-caret-down:before {
+	content: "\e627";
+}
+.ico-caret-left:before {
+	content: "\e628";
+}
+.ico-caret-right:before {
+	content: "\e629";
+}
+.ico-caret-up:before {
+	content: "\e62a";
+}
+.ico-cog:before {
+	content: "\e62b";
+}
+.ico-question-b:before {
+	content: "\e62c";
+}
+.ico-search:before {
+	content: "\e62d";
+}
+.ico-eye:before {
+	content: "\e60b";
+}
+.ico-history:before {
+	content: "\e62e";
+}

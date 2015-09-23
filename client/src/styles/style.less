@@ -1,0 +1,131 @@
+/*
+-----------------------------------------------
+Sup Styles
+http://www.soopro.com
+
+Author:   redy
+Date:     2 dec 2014
+Version: 1.1
+----------------------------------------------- */
+@import "_variables_.less";
+
+/* SECTION: =Brand
+----------------------------------------------- */
+/* brand */
+.brand{
+  width: 100%;
+  margin: 0 auto;
+  padding: 30px;
+  text-align: center;
+  & #logo{
+    display:inline-block;
+    font-size: 100px;
+    line-height:44px;
+    color: @brand-primary;
+    text-align: center;
+    height: 44px;
+    overflow: hidden;
+  }
+  @media (max-width: @screen-xs-max) {
+    /* brand */
+    &{
+      height: 50px;
+      padding: 0 15px;
+    }
+    & #logo{
+      height: 40px;
+      line-height:50px;
+      font-size:80px;
+    }
+  }
+}
+.brand-large{
+  &:extend(.brand all);
+  margin: 0;
+  width:100%;
+  & #logo{
+    font-size:150px;
+    height: 60px;
+    line-height:70px;
+  }
+}
+
+.cr{
+  position: relative;
+  bottom: auto;
+  padding: 10px;
+  width: 100%;
+  color: @text-color-light;
+  text-align: center;
+  opacity: 0.5;
+}
+/* ads */
+.ads-item{
+  color: #eee;
+  margin: 1px 0;
+  padding: 25px 0 15px 0;
+  text-align: center;
+  overflow: hidden;
+  & h4{
+    color: @brand-primary;
+    font-style: italic;
+  }
+  & *{
+    color: @brand-primary;
+  }
+  &:hover{
+    background: @gray;
+    cursor: pointer;
+  }
+  &:hover *{
+    color: @text-color-lighter;
+  }
+}
+
+/* SECTION: =User func
+----------------------------------------------- */
+#user-func{
+  position:relative;
+  display: block;
+  margin-bottom: 10px;
+  padding-right:10px;
+  font-weight:400;
+  margin-top:10px;
+  & .text{
+    vertical-align: middle;
+  }
+  & .name{
+    color:@brand-primary;
+    padding-right:5px;
+    vertical-align: middle;
+  }
+  & .btn-account,
+  & .btn-account:link,
+  & .btn-account:visited{
+    color: @gray-darker;
+    text-decoration:none;
+    vertical-align: middle;
+    margin-top:-1px;
+    margin-right:0;
+    padding-right:0;
+  }
+  & .btn-account:hover{
+    color: @brand-primary;
+  }
+  & .btn-account *{
+    vertical-align: middle;
+  }
+}
+
+/* SECTION: =404
+----------------------------------------------- */
+#error404 h1{
+  color: @gray-light;
+  font-size: 100px;
+}
+
+/* SECTION: =Store
+----------------------------------------------- */
+.store-btn{
+  max-width:100px !important;
+}

@@ -1,0 +1,4 @@
+Flask==0.10.1
+requests>=2.3.0
+redis==2.10.1
+mongokit==0.9.1.1

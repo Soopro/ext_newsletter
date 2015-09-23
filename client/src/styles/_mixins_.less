@@ -1,0 +1,40 @@
+/*
+-----------------------------------------------
+SupBootstrap Mixins
+----------------------------------------------- */
+// Selectable
+.make-selectable(@type) {
+  -moz-user-select: @type;
+  -webkit-user-select: @type;
+  -ms-user-select: @type;
+  user-select: @type;
+}
+.btn-variant(@color){
+  color: #fff;
+  &:link,
+  &:visited{
+    color: @color;
+  }
+}
+// Centered container element
+.container-variant(@gutter) {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left:  (@gutter / 2);
+  padding-right: (@gutter / 2);
+  &:extend(.clearfix all);
+}
+
+.alert-text-variant(@text-color) {
+  color: @text-color;
+}
+// Change button padding
+.button-vertical-size(@padding-vertical, @val) {
+  padding-top: @padding-vertical*@val;
+  padding-bottom: @padding-vertical*@val;
+}
+
+.button-horizontal-size(@padding-horizontal, @val) {
+  padding-left: @padding-horizontal*@val;
+  padding-right: @padding-horizontal*@val;
+}

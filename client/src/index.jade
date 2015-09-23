@@ -1,0 +1,29 @@
+doctype html
+
+html(lang="en", ng-app="newsletterApp")
+  head
+    title SooproExtension
+    meta(http-equiv="Content-Type", content="text/html;charset=utf-8")
+    meta(name="viewport", content="initial-scale=1.0, maximum-scale=1.0")
+    meta(name="apple-mobile-web-app-capable", content="yes")
+    meta(name="apple-mobile-web-app-status-bar-style", content="black")
+    meta(name="format-detection", content="telephone=yes")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+
+    //// Favicons
+    //link(rel="apple-touch-icon-precomposed", sizes="144x144", href="imgs/ico/apple-touch-icon-144-precomposed.png")
+    //link(rel="shortcut icon", href="imgs/ico/favicon.png")
+
+    // Fonts
+    link(href="styles/fonts/supfonts.css", rel="stylesheet", type="text/css")
+    // Icons
+    link(href="styles/fonts/supico.css", rel="stylesheet", type="text/css")
+    // CSS
+    link(href='styles/supbootstrap.css', rel="stylesheet", type="text/css")
+    link(href='styles/style.css', rel="stylesheet", type="text/css")
+
+    include scripts
+    include app/scripts
+
+  body
+    div(ng-view="")

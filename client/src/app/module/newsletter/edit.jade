@@ -1,0 +1,50 @@
+.wrapper
+  section.container-fluid
+
+    .row
+      .section-block.col-md-12.textarea
+        section
+          header
+            h2.title
+              span.text Newsletter
+
+          .col-xs-12.text-right.funcbar
+            a.btn.btn-primary.btn-wider(
+            href='#/edit_post/new'
+            ) 新建文章
+
+            a.btn.btn-primary.btn-wider(
+            href='#/profile'
+            ) 信息设置
+
+            a.btn.btn-primary.btn-wider(
+            href='#/posts'
+            ) 文章管理
+
+            include ../user/logout
+    .row
+      .col-md-8.col-md-offset-2
+        h3 新建文章
+        .form-group
+            label 标题:
+            input.form-control(ng-model="post.title")
+        .form-group
+            label 内容:
+            textarea.form-control(rows="10" ng-model="post.content")
+        .form-group
+            button.btn.btn-primary.btn-wider(ng-click='save_post()') 保存
+          button.btn.btn-default.btn-wider(ng-click='delete_post()') 删除
+        .form-group
+          label 测试发送:
+          input.form-control(
+                    ng-model="test_email"
+                    placeholder="Input test Email Address")
+          button.btn.btn-default.btn-wider(ng-click='send_test_post()') 测试发送
+    .row(ng-if="!is_new")
+      .col-md-8.col-md-offset-2
+        h3 发送给
+        select.form-control(
+          ng-model="selected_role"
+          ng-options="role.title for role in role_list"
+        )
+        button.btn.btn-default.btn-wider(ng-click='send_post()') 发送
