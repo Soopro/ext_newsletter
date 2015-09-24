@@ -1,4 +1,4 @@
-angular.module "newsletterApp"
+angular.module "newsletterClient"
 
 
 .factory "requestInterceptor", [

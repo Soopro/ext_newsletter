@@ -1,1 +1,1 @@
-angular.module "newsletterApp"
+angular.module "newsletterClient"
