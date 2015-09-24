@@ -2,9 +2,7 @@ angular.module "newsletterApp"
 
 .config [
   "$routeProvider"
-  (
-    $routeProvider
-  ) ->
+  ($routeProvider) ->
     $routeProvider
 
     .when "/auth",
