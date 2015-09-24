@@ -1,4 +1,4 @@
-#coding=utf-8
+# coding=utf-8
 from __future__ import absolute_import
 
 from flask import Blueprint, request, current_app
@@ -18,8 +18,6 @@ user_api_endpoints = [
 blueprint = Blueprint(bp_name, __name__)
 
 route_inject(blueprint, urlpatterns)
-
-model_list = [User]
 
 
 @blueprint.before_app_first_request
