@@ -2,25 +2,25 @@ angular.module "newsletterClient"
 
 # AUTH
 .service "Auth", [
-  "$cookieStore"
+  "$cookie"
   (
-    $cookieStore
+    $cookie
   ) ->
-    @set_token = (token) ->
-      $cookieStore.put "newsletter_token", token
+    @setToken = (token) ->
+      $cookie.put "token", token
 
-    @get_token = ->
-      $cookieStore.get "newsletter_token"
+    @getToken = ->
+      $cookie.get "token"
 
-    @set_user = (user) ->
-      $cookieStore.put "newsletter_open_id", user
+    @setOpenId = (open_id) ->
+      $cookie.put "open_id", open_id
 
-    @get_user = ->
-      $cookieStore.get "newsletter_open_id"
+    @getOpenId = ->
+      $cookie.get "open_id"
 
-    @clean_auth = ->
-      $cookieStore.remove "newsletter_token"
-      $cookieStore.remove "newsletter_open_id"
+    @cleanAuth = ->
+      $cookie.remove "token"
+      $cookie.remove "open_id"
 
     return @	# don"t forget!
 ]

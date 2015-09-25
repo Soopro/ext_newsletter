@@ -21,40 +21,40 @@ angular.module "newsletterClient"
 
   ) ->
 
-    get_token = ->
+    getToken = ->
       if $routeParams.open_id
-        $scope.open_id = $routeParams.open_id
-        Auth.clean_auth()
-        restAPI.ext_token.get
-          open_id: $scope.open_id
-        .$promise
-        .then (cb_data) ->
-          if cb_data.state
-            Auth.set_user $scope.open_id
-            redirect_uri = encodeURIComponent(cb_data.redirect_uri)
+        open_id = $routeParams.open_id
+        Auth.cleanAuth()
+				Auth.setOpenId()
+				
+        restAPI.ext_token.get({open_id: open_id})
+	        .$promise
+	        .then (data) ->
+	          if data.state
+	            redirect_uri = encodeURIComponent(data.redirect_uri)
 
-            $window.location = Config.sup_auth_uri +
-              '?open_id=' + $scope.open_id +
-              '&state=' + cb_data.state +
-              '&app_key=' + cb_data.app_key +
-              '&response_type=' + cb_data.response_type +
-              '&redirect_uri=' + redirect_uri
-        .catch (cb_data) ->
-          console.error(cb_data)
+	            $window.location = data.auth_uri +
+	              '?open_id=' + open_id +
+	              '&state=' + data.state +
+	              '&app_key=' + data.app_key +
+	              '&response_type=' + data.response_type +
+	              '&redirect_uri=' + redirect_uri
+		       .catch (data) ->
+	          console.error(data)
       else
         alert "open_id is required!"
 
-    ext_token = Auth.get_token()
+    ext_token = Auth.getToken()
+		
     if !ext_token
-      get_token()
+      getToken()
     else
       console.log("isLogin")
-      restAPI.token_check.post {}
-        ,ext_token: ext_token
-      .$promise
-      .then (cb_data) ->
-        if cb_data.error
-            get_token()
-        else
-          $location.url Config.path.default
+      restAPI.token_check.post({},{ext_token: ext_token})
+	      .$promise
+	      .then (data) ->
+	        if data.error
+	            getToken()
+	        else
+	          $location.url('/')
 ]

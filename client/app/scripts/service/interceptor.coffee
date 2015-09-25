@@ -1,7 +1,5 @@
 angular.module "newsletterClient"
-
-
-.factory "requestInterceptor", [
+.factory "interceptor", [
   "$q"
   "$location"
   "Auth"
@@ -14,18 +12,19 @@ angular.module "newsletterClient"
   ) ->
     request: (request) ->
       request.headers = request.headers or {}
-      if Auth.get_token()
-        request.headers.Authorization = Auth.get_token()
-      request
+      if Auth.getToken()
+        request.headers.Authorization = Auth.getToken()
+      return request
 
     response: (response) ->
-      response or $q.when(response)
+      return response or $q.when(response)
 
     responseError: (rejection) ->
+			if rejection.status is 0 and rejection.data is null
+				$location.path Config.path.auth
       if rejection.status is 401
-        console.log(401)
         $location.path Config.path.auth
-      $q.reject rejection
+      return $q.reject rejection
 ]
 
 .config [
@@ -33,6 +32,6 @@ angular.module "newsletterClient"
   (
     $httpProvider
   ) ->
-    $httpProvider.interceptors.push "requestInterceptor"
+    $httpProvider.interceptors.push "interceptor"
 
 ]
