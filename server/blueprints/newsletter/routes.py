@@ -14,7 +14,9 @@ urlpatterns = [
     ("/posts/<post_id>", newsletter_get_post, "GET"),
     ("/posts/<post_id>", newsletter_update_post, "PUT"),
     ("/posts/<post_id>", newsletter_delete_post, "DELETE"),
-    ("/posts/send", newsletter_send_post, "POST"),
-    # ("/posts/<post_id>/send_test", newsletter_send_test_post, "POST"),
+    
+    ("/posts/<post_id>/mail", newsletter_send_post, "POST"),
+    ("/posts/<post_id>/mail_test", newsletter_send_test_post, "POST"),
+
     ("/member_roles", newsletter_get_member_role, "GET")
 ]

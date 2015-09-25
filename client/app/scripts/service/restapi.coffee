@@ -4,9 +4,11 @@ angular.module 'newsletterClient'
 			profiles: do ->
 				$resource api+"/profiles"
 			posts: do ->
-				$resource api+"/posts"
-			dispatch: do ->
-				$resource api+"/profile/dispatch"
+				$resource api+"/posts/:post_id"
+			mail: do ->
+				$resource api+"/posts/:post_id/mail"
+			mailTest: do ->
+				$resource api+"/posts/:post_id/mail_test"
 			memberRoles: do ->
 				$resource api+"/member_roles"
 			
