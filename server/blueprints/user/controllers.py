@@ -1,12 +1,11 @@
 # coding=utf-8
 from __future__ import absolute_import
 
-from flask import current_app, request, g
+from flask import current_app, request
 from utils.base_utils import output_json
-from utils.request import parse_json, parse_args
-from errors.general_errors import AuthenticationFailed, NotFound, PermissionDenied
-from errors.validation_errors import ObjectIdStructure, UrlStructure
-from errors.bp_users_errors import SooproAccessDeniedError, SooproRequestAccessTokenError, SooproAPIError
+from errors.general_errors import NotFound, PermissionDenied
+from errors.validation_errors import ObjectIdStructure
+from errors.bp_users_errors import SooproRequestAccessTokenError, SooproAPIError
 import uuid
 
 
@@ -40,7 +39,7 @@ def get_ext_token(open_id):
 
 
 @output_json
-def get_sup_token(): #code to here
+def get_sup_token():
     data = request.get_json()
     open_id = data.get('open_id')
 
@@ -58,7 +57,7 @@ def get_sup_token(): #code to here
         print e
         raise SooproRequestAccessTokenError
 
-    if not 'access_token' in resp:
+    if 'access_token' not in resp:
         print resp
         raise SooproAPIError('Soopro OAuth2 get token error: '+str(data))
 
@@ -73,6 +72,28 @@ def get_sup_token(): #code to here
     return {
         'ext_token': ext_token
     }
+
+
+@output_json
+def get_alias():
+    user = g.current_user
+    return {
+        "open_id": unicode(user.open_id),
+        "alias": user.alias
+    }
+
+
+@output_json
+def set_alias():
+    user = g.current_user
+    data = request.get_json()
+    user.alias = data.get("alias")
+    user.save()
+    return {
+        "open_id": unicode(user.open_id),
+        "alias": user.alias
+    }
+    
 
 @output_json
 def token_check():

@@ -1,0 +1,5 @@
+build
+bower_components
+
+*.pyc
+peon.json

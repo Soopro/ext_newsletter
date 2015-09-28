@@ -12,7 +12,7 @@ from utils.request import verify_token
 bp_name = "user"
 
 user_api_endpoints = [
-    "{}.delete_token".format(bp_name)
+    "{}.delete_token".format(bp_name),
 ]
 
 blueprint = Blueprint(bp_name, __name__)
@@ -22,7 +22,7 @@ route_inject(blueprint, urlpatterns)
 
 @blueprint.before_app_first_request
 def before_first_request():
-    current_app.mongodb_database.register(model_list)
+    current_app.mongodb_database.register(User)
     return
 
 

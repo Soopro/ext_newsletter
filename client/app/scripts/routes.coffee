@@ -2,8 +2,13 @@ angular.module "newsletterClient"
 
 .config [
   "$routeProvider"
-  ($routeProvider) ->
+  (
     $routeProvider
+  ) ->
+    $routeProvider
+    
+    .when "/",
+      redirectTo: "/profile"
 
     .when "/auth",
       templateUrl: "views/user/auth.html"
@@ -11,8 +16,6 @@ angular.module "newsletterClient"
     .when "/notify",
       templateUrl: "views/user/notify.html"
       controller: "NotifyCtrl"
-    .when "/login",
-      templateUrl: "views/user/login.html"
     .when "/profile",
       templateUrl: "views/newsletter/profile.html"
       controller: "profileCtrl"
@@ -22,8 +25,8 @@ angular.module "newsletterClient"
     .when "/edit_post/:post_id",
       templateUrl: "views/newsletter/edit.html"
       controller: "postCtrl"
-	  .when "/404",
-			templateUrl: "views/404.html"
+    .when "/404",
+      templateUrl: "views/404.html"
     .otherwise redirectTo: "/404"
 
 ]

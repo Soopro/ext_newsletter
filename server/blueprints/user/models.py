@@ -1,5 +1,6 @@
-#coding: utf-8
+# coding=utf-8
 from __future__ import absolute_import
+
 from mongokit import Document
 
 
@@ -8,6 +9,7 @@ class User(Document):
     __collection__ = 'users'
     structure = {
         "open_id": unicode,
+        "alias": unicode,
         "access_token": unicode,
         "refresh_token": unicode,
         "token_type": unicode,
