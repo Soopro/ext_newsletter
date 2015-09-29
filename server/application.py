@@ -1,33 +1,25 @@
+from __future__ import absolute_import
 from flask import Flask, current_app, request
-from mongokit import Connection
 import traceback
-from redis import Redis
-import os
-from config import DevelopmentConfig, TestingConfig, ProductionConfig
-from utils.encoders import Encoder
-from utils.base_utils import make_cors_headers, make_json_response
+from mongokit import Connection
+from utils.base_utils import make_json_response, make_cors_headers
+from errors.general_errors import (NotFound,
+                                   ErrUncaughtException,
+                                   MethodNotAllowed)
+from config import config as CONFIG_NAME
 from utils.sup_ext_oauth import SupAuth
+from redis import Redis
+from utils.encoders import Encoder
 from mail import MailQueuePusher
 
-from errors.general_errors import NotFound, MethodNotAllowed, ErrUncaughtException
-
-ENV_CONFIG_NAME = os.getenv("NEWSLETTER_CONFIG_NAME", 'development')
-
-config = {
-    'development': DevelopmentConfig,
-    'testing': TestingConfig,
-    'production': ProductionConfig
-}
-
-
-def create_app():
+def create_app(config_name='dev'):
     app = Flask(__name__)
-    redis_store = Redis()
-    app.config.from_object(config[ENV_CONFIG_NAME])
-    app.json_encoder = Encoder
-    mongodb_database = Connection(host=app.config.get("MONGODB_HOST"),
-                                  port=app.config.get("MONGODB_PORT"))
-    mongodb_conn = mongodb_database[app.config.get("MONGODB_DATABASE")]
+    config = CONFIG_NAME[config_name]
+    app.config.from_object(config)
+    app.mongodb_database = Connection(host=app.config.get("DB_HOST"),
+                                      port=app.config.get("DB_PORT"))
+    app.mongodb_conn = app.mongodb_database[app.config.get("DB_DBNAME")]
+
     app.sup_auth = SupAuth(app_key=app.config.get("APP_KEY"),
                            app_secret=app.config.get("APP_SECRET"),
                            grant_type=app.config.get("GRANT_TYPE"),
@@ -35,10 +27,15 @@ def create_app():
                            redirect_uri=app.config.get("REDIRECT_URI"),
                            expired_in=app.config.get("EXPIRED_IN"))
 
-    app.mongodb_database = mongodb_database
-    app.mongodb_conn = mongodb_conn
-    app.redis = redis_store
-    app.mail_pusher = MailQueuePusher(redis_store, True)
+    app.json_encoder = Encoder
+    app.redis = Redis()
+    app.mail_pusher = MailQueuePusher(app.redis, True)
+    
+    from blueprints.user import blueprint as user_module
+    app.register_blueprint(user_module, url_prefix="/newsletter/user")
+
+    from blueprints.newsletter import blueprint as newsletter_module
+    app.register_blueprint(newsletter_module, url_prefix="/newsletter")
 
     # register error handlers
     @app.errorhandler(404)
@@ -65,11 +62,5 @@ def create_app():
             resp.headers.extend(cors_headers)
             return resp
         return
-
-    from blueprints.user import blueprint as user_module
-    app.register_blueprint(user_module, url_prefix="/newsletter/user")
-
-    from blueprints.newsletter import blueprint as newsletter_module
-    app.register_blueprint(newsletter_module, url_prefix="/newsletter")
 
     return app
