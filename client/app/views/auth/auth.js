@@ -23,7 +23,8 @@ angular.module('newsletterClient')
           .then(function (data) {
             if (data.state) {
               var redirect_uri = encodeURIComponent(data.redirect_uri)
-                
+              console.log(data.auth_uri)
+              console.log(redirect_uri)
               $window.location = data.auth_uri +
               '?open_id=' + open_id +
               '&state=' + data.state +

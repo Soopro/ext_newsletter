@@ -11,7 +11,6 @@ from utils.request import verify_token
 
 bp_name = "newsletter"
 
-
 blueprint = Blueprint(bp_name, __name__)
 
 route_inject(blueprint, urlpatterns)

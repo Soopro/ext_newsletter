@@ -11,8 +11,11 @@ angular.module "newsletterClient"
       redirectTo: "/posts"
 
     .when "/auth",
-      templateUrl: "views/authuser/auth.html"
+      templateUrl: "views/auth/auth.html"
       controller: "AuthCtrl"
+    .when "/redirect",
+      templateUrl: "views/auth/redirect.html"
+      controller: "RedirectCtrl"
     .when "/notify",
       templateUrl: "views/auth/notify.html"
       controller: "NotifyCtrl"

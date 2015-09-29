@@ -198,7 +198,7 @@ def newsletter_get_member_role():
     }
     get_member_role_url = current_app.config.get("ROLE_URL")
     resp = requests.get(get_member_role_url, headers=headers)
-    print resp.json()
+    print 'member_role:', resp.json()
     # try:
     #     resp.raise_for_status()
     # except Exception as e:

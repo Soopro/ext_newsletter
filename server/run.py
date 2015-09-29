@@ -1,7 +1,8 @@
+from __future__ import absolute_import
+
 from application import create_app
 
-
-app = create_app()
+app = create_app('production')
 
 if __name__ == "__main__":
-    app.run(port=5000,debug=True,threaded=True)
+    app.run(debug=True, threaded=True, port=5001)

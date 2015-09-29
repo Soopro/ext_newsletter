@@ -17,6 +17,8 @@ class Config(object):
     REMOTE_OAUTH_URL = 'http://d.sup.farm/#/oauth'
     
     TOKEN_URL = 'http://api.sup.farm/oauth/token'
+    
+    ROLE_URL = "http://api.sup.farm/crm/role"
 
     APP_KEY = 'url4-1443411015'
     APP_SECRET = '230275dd-063b-4c8e-bc36-a6c045d2f410'

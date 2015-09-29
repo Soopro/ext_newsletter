@@ -21,19 +21,19 @@ angular.module "newsletterClient"
 
     if !$scope.is_new
       post_id = $routeParams.post_id
-      $scope.post = restAPI.post.get post_id:post_id
+      $scope.post = restAPI.posts.get post_id:post_id
     else
-      $scope.post = new restAPI.post()
+      $scope.post = new restAPI.posts()
 
-    $scope.role_list = restAPI.role_list.query()
+    $scope.role_list = restAPI.memberRoles.query()
 
     $scope.send_test_post = () ->
-      restAPI.send_test_post.post post_id:post_id
+      restAPI.mailTest.save post_id:post_id
         , {test_mail:$scope.test_email}
 
     $scope.send_post = () ->
       console.log $scope.selected_role
-      restAPI.send_post.post post_id:post_id
+      restAPI.mail.save post_id:post_id
         , {selected_role:$scope.selected_role}
 
     $scope.save_post = () ->
