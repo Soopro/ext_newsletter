@@ -13,6 +13,8 @@ bp_name = "user"
 
 user_api_endpoints = [
     "{}.delete_token".format(bp_name),
+    "{}.set_alias".format(bp_name),
+    "{}.get_alias".format(bp_name)
 ]
 
 blueprint = Blueprint(bp_name, __name__)

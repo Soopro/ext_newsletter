@@ -47,6 +47,7 @@ def newsletter_set_profile():
 def newsletter_get_post_list():
     user = g.current_user
     open_id = user.get('open_id')
+    print open_id
 
     posts = current_app.mongodb_conn.NewsletterPost.find({"open_id": open_id})
     out_data = list(posts)

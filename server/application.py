@@ -70,6 +70,6 @@ def create_app():
     app.register_blueprint(user_module, url_prefix="/newsletter/user")
 
     from blueprints.newsletter import blueprint as newsletter_module
-    app.register_blueprint(newsletter_module, url_prefix="/newsletter/newsletter")
+    app.register_blueprint(newsletter_module, url_prefix="/newsletter")
 
     return app

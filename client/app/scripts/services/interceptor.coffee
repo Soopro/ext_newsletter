@@ -20,10 +20,10 @@ angular.module "newsletterClient"
       return response or $q.when(response)
 
     responseError: (rejection) ->
-      if rejection.status is 0 and rejection.data is null
-        $location.path Config.path.auth
+      # if rejection.status is 0 and rejection.data is null
+      #   $location.path '/404'
       if rejection.status is 401
-        $location.path Config.path.auth
+        $location.path '/auth'
       return $q.reject rejection
 ]
 
