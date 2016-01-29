@@ -21,13 +21,11 @@ model_list = [NewsletterProfile, NewsletterPost, NewsletterHistory]
 @blueprint.before_app_first_request
 def before_first_request():
     current_app.mongodb_database.register(model_list)
-    return
 
 
 @blueprint.before_request
 def before_request():
-    verify_token()
-    return
+    verify_token(current_app.config.get("DEBUG"))
 
 
 @blueprint.errorhandler(APIError)

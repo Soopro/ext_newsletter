@@ -1,11 +1,11 @@
-#coding=utf-8
+# coding=utf-8
 from __future__ import absolute_import
 
+import httplib
+import re
 from bson import ObjectId
 from bson.errors import InvalidId
-import httplib
 from .base_errors import APIError
-import re
 
 
 class ValidationParameterRequired(APIError):
@@ -129,10 +129,12 @@ class ParamStructure(object):
     value_min = None
     value_max = None
 
-    def __init__(self, value, name=None):
+    def __init__(self, value, name=None, non_empty=None):
         self.value = value
         if name is not None:
             self.name = name
+        if non_empty is not None:
+            self.non_empty = bool(non_empty)
         self._validate()
         return
 
@@ -141,7 +143,7 @@ class ParamStructure(object):
             self._validate_non_empty()
         elif self.value is None:
             return
-        
+
         if self.type is not None:
             self._validate_type()
 
@@ -149,9 +151,9 @@ class ParamStructure(object):
             self._validate_object_id()
         elif self.format_alias:
             self._validate_alias()
-        
+
         self.value = self.pre_handler()
-            
+
         if self.len_min is not None:
             self._validate_len_min()
 
@@ -171,7 +173,7 @@ class ParamStructure(object):
     def _validate_type(self):
         if not isinstance(self.value, self.type):
             raise ValidationParameterInvalidObjectType(self.name)
-    
+
     def _validate_object_id(self):
         try:
             ObjectId(self.value)
@@ -184,7 +186,8 @@ class ParamStructure(object):
             ValidationParameterInvalidAlias(self.name)
 
     def _validate_non_empty(self):
-        if not bool(self.value) and self.value is not 0 and self.value is not False:
+        if not bool(
+                self.value) and self.value is not 0 and self.value is not False:
             raise ValidationParameterBlank(self.name)
 
     def _validate_len_min(self):
@@ -212,127 +215,124 @@ class ParamStructure(object):
 
 # Parameter structure preset
 class ObjectIdStructure(ParamStructure):
+    non_empty = True
     format_ObjectId = True
 
-class AliasStructure(ParamStructure):
-    len_max = 100
-    non_empty = True
-    format_alias = True
-    type = unicode
 
-class SIDStructure(ParamStructure):    
-    non_empty = True
-    len_max = 146
-    type = unicode
+# class AliasStructure(ParamStructure):
+#     len_max = 100
+#     non_empty = True
+#     format_alias = True
+#     type = unicode
+#
+#
+# class SIDStructure(ParamStructure):
+#     non_empty = True
+#     len_max = 146
+#     type = unicode
 
-class PrimaryDictStructure(ParamStructure):    
+
+class DictStructure(ParamStructure):
     non_empty = True
     type = dict
-    
-class PrimaryAttrStructure(ParamStructure):
+
+
+class AttrStructure(ParamStructure):
     len_max = 100
     non_empty = True
     type = unicode
 
-class PrimaryDescStructure(ParamStructure):
+
+# class DescStructure(ParamStructure):
+#     len_max = 500
+#     non_empty = True
+#     type = unicode
+
+
+class TokenStructure(ParamStructure):
     len_max = 500
     non_empty = True
     type = unicode
 
-class PrimaryContentStructure(ParamStructure):
+
+class ContentStructure(ParamStructure):
     non_empty = True
     type = unicode
 
-class PrimaryListStructure(ParamStructure):    
+
+class ListStructure(ParamStructure):
     non_empty = True
-    type = list  
-    
+    type = list
+
+
+# class FileStructure(ParamStructure):
+#     non_empty = True
+#     type = None
+
+
 class OrderStructure(ParamStructure):
     non_empty = True
     type = int
 
-class DictStructure(ParamStructure):
-    non_empty = False
-    type = dict
 
-class PriceStructure(ParamStructure):
+class StatusStructure(ParamStructure):
     non_empty = True
     type = int
 
-class FloatStructure(ParamStructure):
-    non_empty = True
-    type = float
 
-class AmountStructure(ParamStructure):
-    non_empty = True
-    type = int
+# class LengthStructure(ParamStructure):
+#     non_empty = True
+#     type = int
+#
+#
+# class IntegerStructure(ParamStructure):
+#     non_empty = True
+#     type = int
+#
+#
+# class BoolStructure(ParamStructure):
+#     non_empty = True
+#     type = bool
 
-class AlipayPartenerStructure(ParamStructure):
-    non_empty = True
-    type = int
-
-class LengthStructure(ParamStructure):
-    non_empty = True
-    type = int
-    
-class MinorListStructure(ParamStructure):    
-    non_empty = False
-    type = list  
-    
-class MinorDictStructure(ParamStructure):
-    type = dict
-
-class MinorAttrStructure(ParamStructure):
-    len_max = 100
-    type = unicode
-    
-class MinorDescStructure(ParamStructure):
-    len_max = 500
-    non_empty = False
-    type = unicode
-
-class MinorContentStructure(ParamStructure):
-    non_empty = True
-    type = unicode
 
 class UrlStructure(ParamStructure):
     len_max = 500
     non_empty = True
     type = unicode
-    
-class MinorUrlStructure(ParamStructure):
-    len_max = 500
-    non_empty = False
-    type = unicode
 
-class ProtocolStructure(ParamStructure):
-    len_max = 10
-    non_empty = True
-    type = unicode
 
-class DomainStructure(ParamStructure):
-    len_max = 100
-    non_empty = True
-    type = unicode
-
-class EmailStructure(ParamStructure):
-    len_max = 150
-    non_empty = True
-    type = unicode
-
-class FlagBitStructure(ParamStructure):    
-    non_empty = True
-    value_min = 0
-    value_max = 100
-    type = int
-    
-class LoginStructure(ParamStructure):
-    non_empty = True
-    len_min = 11
-    type = unicode
-    
-class PasswordStructure(ParamStructure):    
-    non_empty = True
-    len_max = 500
-    type = unicode 
-
+# class ProtocolStructure(ParamStructure):
+#     len_max = 10
+#     non_empty = True
+#     type = unicode
+#
+#
+# class DomainStructure(ParamStructure):
+#     len_max = 100
+#     non_empty = True
+#     type = unicode
+#
+#
+# class EmailStructure(ParamStructure):
+#     len_max = 150
+#     non_empty = True
+#     type = unicode
+#
+#
+# class FlagBitStructure(ParamStructure):
+#     non_empty = True
+#     value_min = 0
+#     value_max = 100
+#     type = int
+#
+#
+# class LoginStructure(ParamStructure):
+#     non_empty = True
+#     len_max = 200
+#     type = unicode
+#
+#
+# class PasswordStructure(ParamStructure):
+#     non_empty = True
+#     len_max = 50
+#     type = unicode

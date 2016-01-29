@@ -86,12 +86,10 @@ class MailQueuePusher(object):
     def __init__(self, rds_conn, enabled=False):
         self.rds_conn = rds_conn
         self.enabled = enabled
-        return
 
     def push_data_to_queue(self, data):
         if self.enabled is True:
             self.rds_conn.lpush(self.rds_queue_key, data)
-        return
 
     def push_single_mail(self, mail):
         mail_data = json.dumps(mail)

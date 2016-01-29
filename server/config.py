@@ -1,37 +1,67 @@
+# coding=utf-8
+from __future__ import absolute_import
+
+from datetime import timedelta
+
+
 class Config(object):
     DEBUG = True
-    
-    HOST = "127.0.0.1"
-    PORT = 5001
 
-    DB_HOST = '127.0.0.1'
-    DB_PORT = 27017
-    DB_DBNAME = 'ext_newsletter'
-    REDIRECT_URL_DOMAIN = 'http://url4.cc'
+    HOST = "127.0.0.1"
+    PORT = 5003
+
+    EXT_COMMENT_DB_HOST = '127.0.0.1'
+    EXT_COMMENT_DB_PORT = 27017
 
     SECRET_KEY = 'secret_key'
 
     ALLOW_ORIGINS = ['*']
     ALLOW_CREDENTIALS = False
 
-    REMOTE_OAUTH_URL = 'http://d.sup.farm/#/oauth'
-    
-    TOKEN_URL = 'http://api.sup.farm/oauth/token'
-    
-    ROLE_URL = "http://api.sup.farm/crm/role"
-
-    APP_KEY = 'url4-1443411015'
-    APP_SECRET = '230275dd-063b-4c8e-bc36-a6c045d2f410'
+    EXT_KEY = 'comment-1453895893'
+    EXT_SECRET = '38a6daf0-a718-4456-938f-c6ab2ad03456'
     GRANT_TYPE = 'code'
 
-    REDIRECT_URI = 'http://127.0.0.1:9527/#/redirect'
+    REMOTE_OAUTH_URL = 'http://d.soopro.com/#/oauth'
+    TOKEN_URL = 'http://api.soopro.com/oauth/token'
+
+    REDIRECT_URI = 'http://localhost:9527/#/redirect'
     EXPIRED_IN = 36000
-    
+
+    # # JWT
+    # JWT_SECRET_KEY = SECRET_KEY  # SECRET_KEY
+    # JWT_ALGORITHM = 'HS256'
+    # JWT_VERIFY_EXPIRATION = True,
+    # JWT_LEEWAY = 0
+    # JWT_EXPIRATION_DELTA = timedelta(seconds=3600 * 24 * 30)
+    # JWT_DEFAULT_REALM = 'Login Required'
+
+
+class DevelopmentConfig(Config):
+    EXT_COMMENT_DB_DBNAME = 'ext_comment_dev'
+
+
+class TestCaseConfig(Config):
+    DEBUG = False
+    EXT_COMMENT_DB_DBNAME = 'ext_comment_testcase'
+
+
+class TestingConfig(Config):
+    DEBUG = False
+    EXT_COMMENT_DB_DBNAME = 'ext_comment_test'
+
+
 class ProductionConfig(Config):
     DEBUG = False
+    EXT_COMMENT_DB_DBNAME = 'ext_comment_production'
+    
+    REDIRECT_URI = 'http://ext.soopro.com/comment/client/#/redirect'
 
 
 config = {
-    'dev': Config,
-    'production': ProductionConfig
+    'development': DevelopmentConfig,
+    'testing': TestingConfig,
+    'production': ProductionConfig,
+    "testcase": TestCaseConfig,
+    'default': DevelopmentConfig
 }
