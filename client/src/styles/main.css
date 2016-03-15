@@ -1,0 +1,179 @@
+/*
+-----------------------------------------------
+Sup Styles
+http://www.soopro.com
+
+Author:   redy
+Date:     2 dec 2014
+Version: 1.1
+----------------------------------------------- */
+/*
+/* Variables
+/* -------------------------------------------------- */
+/* Colors
+----------------------------------------------- */
+/* Brand */
+/* Alert */
+/* Scaffolding
+----------------------------------------------- */
+/* Typography
+----------------------------------------------- */
+/* Components
+----------------------------------------------- */
+/* Tables
+----------------------------------------------- */
+/* Buttons
+----------------------------------------------- */
+/* Forms
+----------------------------------------------- */
+/* Dropdowns
+----------------------------------------------- */
+/* Z-index master list
+----------------------------------------------- */
+/* Media queries breakpoints
+----------------------------------------------- */
+/* Grid system
+----------------------------------------------- */
+/* Container sizes
+----------------------------------------------- */
+/* Navs
+----------------------------------------------- */
+/* Form states and alerts
+----------------------------------------------- */
+/* Tooltips
+----------------------------------------------- */
+/* Popovers
+----------------------------------------------- */
+/* Alerts
+----------------------------------------------- */
+/* Progress bars
+----------------------------------------------- */
+/* List group
+----------------------------------------------- */
+/* Thumbnails
+----------------------------------------------- */
+/* Wells
+----------------------------------------------- */
+/* Code
+----------------------------------------------- */
+/* Type
+----------------------------------------------- */
+/* SECTION: =Brand
+----------------------------------------------- */
+/* brand */
+.brand,
+.brand-large {
+  width: 100%;
+  margin: 0 auto;
+  padding: 30px;
+  text-align: center;
+}
+.brand #logo,
+.brand-large #logo {
+  display: inline-block;
+  font-size: 100px;
+  line-height: 44px;
+  color: #7eae64;
+  text-align: center;
+  height: 44px;
+  overflow: hidden;
+}
+@media (max-width: 767px) {
+  .brand,
+  .brand-large {
+    /* brand */
+    height: 50px;
+    padding: 0 15px;
+  }
+  .brand #logo,
+  .brand-large #logo {
+    height: 40px;
+    line-height: 50px;
+    font-size: 80px;
+  }
+}
+.brand-large {
+  margin: 0;
+  width: 100%;
+}
+.brand-large #logo {
+  font-size: 150px;
+  height: 60px;
+  line-height: 70px;
+}
+.cr {
+  position: relative;
+  bottom: auto;
+  padding: 10px;
+  width: 100%;
+  color: #999999;
+  text-align: center;
+  opacity: 0.5;
+}
+/* ads */
+.ads-item {
+  color: #eee;
+  margin: 1px 0;
+  padding: 25px 0 15px 0;
+  text-align: center;
+  overflow: hidden;
+}
+.ads-item h4 {
+  color: #7eae64;
+  font-style: italic;
+}
+.ads-item * {
+  color: #7eae64;
+}
+.ads-item:hover {
+  background: #666666;
+  cursor: pointer;
+}
+.ads-item:hover * {
+  color: #ffffff;
+}
+/* SECTION: =User func
+----------------------------------------------- */
+#user-func {
+  position: relative;
+  display: block;
+  margin-bottom: 10px;
+  padding-right: 10px;
+  font-weight: 400;
+  margin-top: 10px;
+}
+#user-func .text {
+  vertical-align: middle;
+}
+#user-func .name {
+  color: #7eae64;
+  padding-right: 5px;
+  vertical-align: middle;
+}
+#user-func .btn-account,
+#user-func .btn-account:link,
+#user-func .btn-account:visited {
+  color: #444444;
+  text-decoration: none;
+  vertical-align: middle;
+  margin-top: -1px;
+  margin-right: 0;
+  padding-right: 0;
+}
+#user-func .btn-account:hover {
+  color: #7eae64;
+}
+#user-func .btn-account * {
+  vertical-align: middle;
+}
+/* SECTION: =404
+----------------------------------------------- */
+#error404 h1 {
+  color: #999999;
+  font-size: 100px;
+}
+/* SECTION: =Store
+----------------------------------------------- */
+.store-btn {
+  max-width: 100px !important;
+}

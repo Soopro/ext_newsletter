@@ -1,0 +1,63 @@
+
+<div class="wrapper">
+  <section class="container-fluid">
+    <div class="row">
+      <div class="section-block col-md-12 textarea">
+        <section>
+          <header>
+            <h2 class="title"><span class="text">Newsletter</span></h2>
+          </header>
+          <div class="col-xs-12 text-right funcbar"><a href="#/edit_post/new" class="btn btn-primary btn-wider">新建文章</a><a href="#/profile" class="btn btn-primary btn-wider">信息设置</a><a href="#/posts" class="btn btn-primary btn-wider">文章管理</a></div>
+        </section>
+      </div>
+    </div>
+    <div class="row">
+      <div></div>
+      <div class="section-block col-md-8 col-md-offset-2 textarea">
+        <section>
+          <header>
+            <h3 class="title">SMTP设置</h3>
+          </header>
+          <form name="form" novalidate="novalidate">
+            <fieldset class="form-group">
+              <label>host</label>
+              <input type="text" name="host" ng-model="profile.host" placeholder="host" required="" class="form-control"/>
+              <div ng-show="form.$submitted || form.host.$touched">
+                <div ng-show="form.host.$error.required" class="error"><i class="ico-x errorico"></i><span class="text">Required!</span></div>
+              </div>
+            </fieldset>
+            <fieldset class="form-group">
+              <label>port</label>
+              <input type="number" name="port" ng-model="profile.port" placeholder="port" required="" class="form-control"/>
+              <div ng-show="form.$submitted || form.port.$touched">
+                <div ng-show="form.port.$error.required" class="error"><i class="ico-x errorico"></i><span class="text">Required!</span></div>
+              </div>
+            </fieldset>
+            <fieldset class="form-group">
+              <label>username</label>
+              <input type="text" name="username" ng-model="profile.username" placeholder="username" required="required" class="form-control"/>
+              <div ng-show="form.$submitted || form.username.$touched">
+                <div ng-show="form.username.$error.required" class="error"><i class="ico-x errorico"></i><span class="text">Required!</span></div>
+              </div>
+            </fieldset>
+            <fieldset class="form-group">
+              <label>password</label>
+              <input type="password" name="password" ng-model="profile.passwd" placeholder="password" required="required" class="form-control"/>
+              <div ng-show="form.$submitted || form.password.$touched">
+                <div ng-show="form.password.$error.required" class="error"><i class="ico-x errorico"></i><span class="text">Required!</span></div>
+              </div>
+            </fieldset>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name="use_tls" ng-model="profile.use_tls" ng-checked="profile.use_tls"/>使用TLS
+              </label>
+            </div>
+          </form>
+          <footer>
+            <button ng-click="update_profile()" class="btn btn-primary btn-wider">确认</button>
+          </footer>
+        </section>
+      </div>
+    </div>
+  </section>
+</div>

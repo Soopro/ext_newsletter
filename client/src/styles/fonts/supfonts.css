@@ -1,0 +1,64 @@
+/*
+-----------------------------------------------
+Sup Font Styles
+http://www.soopro.io
+
+Author:   redy
+Date:     2 dec 2014
+Version: 1.1
+----------------------------------------------- */
+@font-face {
+	font-family: Lato;
+	src: url('lato-hairline.woff');
+	font-weight: 200;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: Lato;
+	src: url('lato-hairlineitalic.woff');
+	font-weight: 200;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: Lato;
+	src: url('lato-light.woff');
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: Lato;
+	src: url('lato-lightitalic.woff');
+	font-weight: 300;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: Lato;
+	src: url('lato-regular.woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: Lato;
+	src: url('lato-italic.woff');
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face{
+	font-family: Lato;
+	src: url('lato-bold.woff');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face{
+	font-family: Lato;
+	src: url('lato-bolditalic.woff');
+	font-weight: bold;
+	font-style: italic;
+}

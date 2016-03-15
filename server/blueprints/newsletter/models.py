@@ -1,4 +1,4 @@
-#coding=utf-8
+# coding=utf-8
 from mongokit import Document, ObjectId
 from datetime import datetime
 
@@ -16,7 +16,12 @@ class NewsletterPost(Document):
         "update_time": datetime,
     }
 
-    required_fields = ["open_id", "title", "content", "update_time"]
+    required_fields = [
+        "open_id",
+        "title",
+        "content",
+        "update_time"
+    ]
     default_values = {
         "update_time": datetime.utcnow
     }
@@ -32,7 +37,8 @@ class NewsletterPost(Document):
         })
 
 
-NewsletterHistoryProcessUnsent, NewsletterHistoryProcessSending, NewsletterHistoryProcessSent = xrange(3)
+NewsletterHistoryProcessUnsent, NewsletterHistoryProcessSending,\
+    NewsletterHistoryProcessSent = xrange(3)
 
 
 class NewsletterHistory(Document):
@@ -55,7 +61,7 @@ class NewsletterHistory(Document):
         })
 
 
-class NewsletterProfile(Document):
+class Profile(Document):
     __collection__ = "profile"
 
     structure = {

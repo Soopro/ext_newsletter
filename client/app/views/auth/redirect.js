@@ -7,7 +7,7 @@
  * # RedirectCtrl
  * Controller of the url4Client
  */
-angular.module('newsletterClient')
+angular.module('newsletter')
   .controller('RedirectCtrl', function ($routeParams, Auth, restAPI, $location) {
     if ($routeParams.code && $routeParams.state) {
       var params = {

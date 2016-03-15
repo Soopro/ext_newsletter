@@ -1,61 +1,61 @@
 # coding=utf-8
 from __future__ import absolute_import
 
-from datetime import timedelta
-
 
 class Config(object):
     DEBUG = True
+    SECRET_KEY = 'newsletter_999'
 
-    HOST = "127.0.0.1"
-    PORT = 5003
+    DB_HOST = '127.0.0.1'
+    DB_PORT = 27017
 
-    EXT_COMMENT_DB_HOST = '127.0.0.1'
-    EXT_COMMENT_DB_PORT = 27017
-
-    SECRET_KEY = 'secret_key'
+    CURL_BASE_URL = 'http://127.0.0.1/newsletter'
 
     ALLOW_ORIGINS = ['*']
     ALLOW_CREDENTIALS = False
 
-    EXT_KEY = 'comment-1453895893'
+    OAUTH_GRANT_TYPE = 'code'
+    OAUTH_EXPIRED_IN = 36000
+
+    EXT_KEY = 'url4cc-1453895893'
     EXT_SECRET = '38a6daf0-a718-4456-938f-c6ab2ad03456'
-    GRANT_TYPE = 'code'
 
-    REMOTE_OAUTH_URL = 'http://d.soopro.com/#/oauth'
-    TOKEN_URL = 'http://api.soopro.com/oauth/token'
-
-    REDIRECT_URI = 'http://localhost:9527/#/redirect'
-    EXPIRED_IN = 36000
-
-    # # JWT
-    # JWT_SECRET_KEY = SECRET_KEY  # SECRET_KEY
-    # JWT_ALGORITHM = 'HS256'
-    # JWT_VERIFY_EXPIRATION = True,
-    # JWT_LEEWAY = 0
-    # JWT_EXPIRATION_DELTA = timedelta(seconds=3600 * 24 * 30)
-    # JWT_DEFAULT_REALM = 'Login Required'
+    OAUTH_PAGE_URI = 'http://sup.local:9527/#/oauth'
+    OAUTH_TOKEN_API_URI = 'http://localhost:5000/oauth/token'
+    OAUTH_REDIRECT_URI = 'http://localhost:8888/#/auth/redirect'
 
 
 class DevelopmentConfig(Config):
-    EXT_COMMENT_DB_DBNAME = 'ext_comment_dev'
+    DB_DBNAME = 'ext_newsletter_dev'
 
 
 class TestCaseConfig(Config):
-    DEBUG = False
-    EXT_COMMENT_DB_DBNAME = 'ext_comment_testcase'
+    DB_DBNAME = 'ext_newsletter_testcase'
+
+    CURL_BASE_URL = 'http://127.0.0.1/newsletter'
 
 
 class TestingConfig(Config):
-    DEBUG = False
-    EXT_COMMENT_DB_DBNAME = 'ext_comment_test'
+    DB_DBNAME = 'ext_newsletter_test'
+
+    EXT_KEY = 'url4cc-1453895893'
+    EXT_SECRET = '38a6daf0-a718-4456-938f-c6ab2ad03456'
+
+    OAUTH_PAGE_URI = 'http://d.sup.farm/#/oauth'
+    OAUTH_TOKEN_API_URI = 'http://api.sup.farm/oauth/token'
+    OAUTH_REDIRECT_URI = 'http://ext.sup.farm/url4/client/#/auth/redirect'
 
 
 class ProductionConfig(Config):
     DEBUG = False
-    EXT_COMMENT_DB_DBNAME = 'ext_comment_production'
-    
-    REDIRECT_URI = 'http://ext.soopro.com/comment/client/#/redirect'
+    DB_DBNAME = 'ext_newsletter_prd'
+
+    EXT_KEY = 'url4cc-1453895893'
+    EXT_SECRET = '38a6daf0-a718-4456-938f-c6ab2ad03456'
+
+    OAUTH_PAGE_URI = 'http://d.soopro.com/#/oauth'
+    OAUTH_TOKEN_API_URI = 'http://api.soopro.com/oauth/token'
+    OAUTH_REDIRECT_URI = 'http://ext.soopro.com/url4/client/#/auth/redirect'
 
 
 config = {

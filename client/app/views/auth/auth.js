@@ -7,7 +7,7 @@
  * # AuthCtrl
  * Controller of the url4Client
  */
-angular.module('newsletterClient')
+angular.module('newsletter')
   .controller('AuthCtrl', function ($window, $routeParams, Auth, restAPI, Config, $location) {
     
     // get remote redirect info from ext server.

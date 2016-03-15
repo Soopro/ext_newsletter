@@ -4,15 +4,16 @@ from __future__ import absolute_import
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 import requests
 import json
-from flask import current_app
 
 
-class SupAuth(object):
-    def __init__(self, ext_key, ext_secret, grant_type, secret_key, redirect_uri, expired_in=3600):
+class SupOAuth(object):
+    def __init__(self, ext_key, ext_secret, grant_type, secret_key,
+                 token_uri, redirect_uri, expired_in=3600):
         self._s = Serializer(secret_key, expired_in)
         self.ext_key = ext_key
         self.ext_secret = ext_secret
         self.grant_type = grant_type
+        self.token_uri = token_uri
         self.redirect_uri = redirect_uri
 
     def generate_ext_token(self, open_id):
@@ -34,7 +35,9 @@ class SupAuth(object):
             'redirect_uri': self.redirect_uri
         }
         headers = {'content-type': 'application/json'}
-        r = requests.post(current_app.config.get('TOKEN_URL'), data=json.dumps(payloads), headers=headers)
+        r = requests.post(self.token_uri, 
+                          data=json.dumps(payloads),
+                          headers=headers)
         return json.loads(r.text)
 
     def refresh_access_token(self, refresh_token):
@@ -46,7 +49,9 @@ class SupAuth(object):
         }
         headers = {'content-type': 'application/json'}
 
-        r = requests.post(current_app.config.get('TOKEN_URL'), data=json.dumps(payloads), headers=headers)
+        r = requests.post(self.token_uri, 
+                          data=json.dumps(payloads),
+                          headers=headers)
         return json.loads(r.text)
     
     def check_access_token(self, access_token):
@@ -57,5 +62,7 @@ class SupAuth(object):
             'response_type': "access_token",
         }
         headers = {'content-type': 'application/json'}
-        r = requests.post(current_app.config.get('TOKEN_URL'), data=json.dumps(payloads), headers=headers)
+        r = requests.post(self.token_uri,
+                          data=json.dumps(payloads),
+                          headers=headers)
         return json.loads(r.text)

@@ -1,28 +1,20 @@
-#coding=utf-8
+# coding=utf-8
 from __future__ import absolute_import
-from .controllers import (newsletter_get_profile, 
-                          newsletter_set_profile, 
-                          newsletter_get_post_list,
-                          newsletter_get_post, 
-                          newsletter_add_post, 
-                          newsletter_update_post,
-                          newsletter_delete_post, 
-                          newsletter_send_post, 
-                          newsletter_send_test_post,
-                          newsletter_get_member_role)
+from .controllers import *
 
 
 urlpatterns = [
-    ("/profile", newsletter_get_profile, "GET"),
-    ("/profile", newsletter_set_profile, "POST"),
-    ("/posts", newsletter_get_post_list, "GET"),
-    ("/posts", newsletter_add_post, "POST"),
-    ("/posts/<post_id>", newsletter_get_post, "GET"),
-    ("/posts/<post_id>", newsletter_update_post, "PUT"),
-    ("/posts/<post_id>", newsletter_delete_post, "DELETE"),
-    
-    ("/posts/<post_id>/mail", newsletter_send_post, "POST"),
-    ("/posts/<post_id>/mail_test", newsletter_send_test_post, "POST"),
+    ("/profile", get_profile, "GET"),
+    ("/profile", create_profile, "POST"),
+    ("/profile", update_profile, "PUT"),
+    ("/post", get_posts, "GET"),
+    ("/post", create_post, "POST"),
+    ("/post/<post_id>", get_post, "GET"),
+    ("/post/<post_id>", update_post, "PUT"),
+    ("/post/<post_id>", delete_post, "DELETE"),
+         
+    ("/posts/<post_id>/mail", send_post, "POST"),
+    ("/posts/<post_id>/mail_test", send_test_post, "POST"),
 
-    ("/member_roles", newsletter_get_member_role, "GET")
+    ("/member_roles", get_member_role, "GET")
 ]

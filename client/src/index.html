@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="" ng-app="newsletter">
+<head>
+  <title>Url4cc</title>
+  
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  
+  <link rel="shortcut icon" href="styles/favicon.png">
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/pay.css">
+  <link rel="stylesheet" href="styles/supbootstrap.css">
+</head>
+<body layout="column">
+  <ng-view></ng-view>
+  {% include '_conf_.html' %}
+  
+  {% include 'scripts/_r_app_.html' %}
+  {% include 'blueprints/_r_scripts_.html' %}
+</body>
+</html>

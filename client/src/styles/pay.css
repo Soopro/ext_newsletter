@@ -1,0 +1,14 @@
+.checkout .row {
+  max-width: 400px;
+  margin: 0 auto;
+}
+.checkout .btn {
+  font-size: 25px;
+}
+.notify .row {
+  max-width: 400px;
+  margin: 0 auto;
+}
+.notify .btn {
+  font-size: 25px;
+}

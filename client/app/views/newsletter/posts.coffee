@@ -1,4 +1,4 @@
-angular.module "newsletterClient"
+angular.module "newsletter"
 
 .controller "postsCtrl", [
   "$rootScope"

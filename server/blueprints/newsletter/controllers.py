@@ -1,153 +1,153 @@
-#coding=utf-8
-from flask import current_app, g, request
+# coding=utf-8
+from flask import current_app, g
 from mongokit import ObjectId
 import requests
 
-from errors.bp_newsletter_errors import *
-from errors.bp_users_errors import SooproAPIError
-from utils.base_utils import output_json
-from utils.request import parse_json
+from .errors import *
+from utils.api_utils import output_json
+from utils.request import get_param
 
 
 @output_json
-def newsletter_get_profile():
-    user = g.current_user
-    open_id = user.get("open_id")
-    profile = current_app.mongodb_conn.NewsletterProfile.find_one_by_open_id(open_id)
-    if profile is None:
-        profile = current_app.mongodb_conn.NewsletterProfile()
+def get_profile():
+    profile = current_app.mongodb_conn.Profile.\
+        find_one_by_open_id(g.current_user["open_id"])
+    if not profile:
+        raise ProfileNotFound
 
-    return profile
+    return output_profile(profile)
 
 
 @output_json
-def newsletter_set_profile():
-    req = parse_json()
-    host, port, username, passwd, use_tls = req.get_params("host", "port", "username", "passwd", "use_tls")
-    user = g.current_user
-    open_id = user.get('open_id')
+def create_profile():
+    host = get_param("host", required=True)
+    port = get_param("port", required=True)
+    username = get_param("username", required=True)
+    passwd = get_param("passwd", required=True)
+    use_tls = get_param("use_tls", missing=False)
 
-    if not use_tls:
-        use_tls = False
-
-    profile = current_app.mongodb_conn.NewsletterProfile.find_one_by_open_id(open_id)
-    if profile is None:
-        profile = current_app.mongodb_conn.NewsletterProfile()
-        profile["open_id"] = open_id
+    Profile = current_app.mongodb_conn.Profile
+    profile = Profile.find_one_by_open_id(g.current_user["open_id"])
+    if profile:
+        raise ProfileHasExisted
+    profile = Profile()
+    profile["open_id"] = g.current_user["open_id"]
     profile["host"] = host
     profile["port"] = port
     profile["username"] = username
     profile["passwd"] = passwd
     profile["use_tls"] = use_tls
     profile.save()
-    return profile
+    return output_profile(profile)
 
 
 @output_json
-def newsletter_get_post_list():
-    user = g.current_user
-    open_id = user.get('open_id')
-    print open_id
+def update_profile():
+    host = get_param("host", required=True)
+    port = get_param("port", required=True)
+    username = get_param("username", required=True)
+    passwd = get_param("passwd", required=True)
+    use_tls = get_param("use_tls", missing=False)
 
-    posts = current_app.mongodb_conn.NewsletterPost.find({"open_id": open_id})
-    out_data = list(posts)
-    # histroy
-    for post in out_data:
-        post["send_history"] = []
-    return out_data
+    profile = current_app.mongodb_conn.Profile.\
+        find_one_by_open_id(g.current_user["open_id"])
+    if not profile:
+        raise ProfileNotFound
+    profile["host"] = host
+    profile["port"] = port
+    profile["username"] = username
+    profile["passwd"] = passwd
+    profile["use_tls"] = use_tls
+    profile.save()
+    return output_profile(profile)
 
 
 @output_json
-def newsletter_add_post():
+def get_posts():
+    posts = current_app.mongodb_conn.NewsletterPost.\
+        find_all_by_open_id(g.current_user["open_id"])
+    return [output_post(post) for post in posts]
+
+
+@output_json
+def create_post():
     user = g.current_user
     open_id = user.get('open_id')
-    req = parse_json()
 
-    title, content = req.get_required_params("title", "content")
+    title = get_param('title', required=True)
+    content = get_param('content', required=True)
+
     post = current_app.mongodb_conn.NewsletterPost()
     post["open_id"] = open_id
     post["title"] = title
     post["content"] = content
-    try:
-        post.save()
-    except Exception as e:
-        current_app.logger.error(e)
-        raise ErrExtNewsletterPostMongoDBErr
+    post.save()
+
     return output_post(post)
 
 
 @output_json
-def newsletter_get_post(post_id):
-    user = g.current_user
-    open_id = user.get('open_id')
+def get_post(post_id):
+    post = current_app.mongodb_conn.NewsletterPost.\
+        find_one_by_post_id(post_id)
+    if not post:
+        raise PostNotFound
 
-    post_id = ObjectId(post_id)
-    post = current_app.mongodb_conn.NewsletterPost.find_one_by_post_id(post_id)
-    if post is None:
-        raise ErrExtNewsletterPostNotFound
-    # history = current_app.mongodb_conn.NewsletterHistory.one_by_post_id(post_id)
     return output_post(post)
 
 
 @output_json
-def newsletter_update_post(post_id):
-    user = g.current_user
-    open_id = user.get('open_id')
-    profile = current_app.mongodb_conn.NewsletterProfile.find_one_by_open_id(open_id)
-    if profile is None:
-        raise ErrExtNewsletterProfileNotFound
+def update_post(post_id):
+    profile = current_app.mongodb_conn.Profile.\
+        find_one_by_open_id(g.current_user["open_id"])
+    if not profile:
+        raise ProfileNotFound
 
-    req = parse_json()
-    title, content = req.get_required_params("title", "content")
+    title = get_param('title', required=True)
+    content = get_param('content', required=True)
 
-    post = current_app.mongodb_conn.NewsletterPost.find_one_by_post_id(post_id)
-    if post is None:
-        raise ErrExtNewsletterPostNotFound
+    post = current_app.mongodb_conn.NewsletterPost.\
+        find_one_by_post_id(post_id)
+    if post:
+        raise PostNotFound
 
     post["title"] = title
     post["content"] = content
-    try:
-        post.save()
-    except Exception as e:
-        current_app.logger.error(e)
-        raise ErrExtNewsletterPostMongoDBErr
-    return post
+    post.save()
+
+    return output_post(post)
 
 
 @output_json
-def newsletter_delete_post(post_id):
-    user = g.current_user
-    open_id = user.get('open_id')
-    profile = current_app.mongodb_conn.NewsletterProfile.find_one_by_open_id(open_id)
-    if profile is None:
-        raise ErrExtNewsletterProfileNotFound
+def delete_post(post_id):
+    profile = current_app.mongodb_conn.Profile.\
+        find_one_by_open_id(g.current_user["open_id"])
+    if not profile:
+        raise ProfileNotFound
 
     post_id = ObjectId(post_id)
 
-    post = current_app.mongodb_conn.NewsletterPost.find_one_by_post_id(post_id)
-    if post is None:
+    post = current_app.mongodb_conn.NewsletterPost.\
+        find_one_by_post_id(post_id)
+    if not post:
         raise ErrExtNewsletterPostNotFound
 
-    try:
-        post.delete()
-    except Exception as e:
-        current_app.logger.error(e)
-        raise ErrExtNewsletterPostMongoDBErr
-    return {"_id": post_id}
+    post.delete()
+
+    return output_post(post)
 
 
 @output_json
-def newsletter_send_post(post_id):
-    user = g.current_user
-    open_id = user.get('open_id')
-    print request.json
-    profile = current_app.mongodb_conn.NewsletterProfile.find_one_by_open_id(open_id)
-    if profile is None:
-        raise ErrExtNewsletterProfileNotFound
+def send_post(post_id):
+    profile = current_app.mongodb_conn.Profile.\
+        find_one_by_open_id(g.current_user["open_id"])
+    if not profile:
+        raise ProfileNotFound
 
-    post = current_app.mongodb_conn.NewsletterPost.find_one_by_post_id(post_id)
-    if post is None:
-        raise ErrExtNewsletterPostNotFound
+    post = current_app.mongodb_conn.NewsletterPost.\
+        find_one_by_post_id(post_id)
+    if not post:
+        raise PostNotFound
 
     req = parse_json()
     role_id = req.get_required_params('selected_role').get("id")
@@ -156,7 +156,6 @@ def newsletter_send_post(post_id):
     print "members:", members
     to = []
     for member in members:
-        print
         to.append(member.get('email'))
     # get email addresses and send emails
     # todo get emails from member ids
@@ -164,54 +163,47 @@ def newsletter_send_post(post_id):
     _send_mail(post, profile, to)
     # todo send history
 
-    return post
+    return output_post(post)
 
 
 @output_json
-def newsletter_send_test_post(post_id):
-    user = g.current_user
-    open_id = user.get('open_id')
+def send_test_post(post_id):
+    test_email = get_param('test_mail', required=True)
 
-    post = current_app.mongodb_conn.NewsletterPost.find_one_by_post_id(post_id)
-    if post is None:
-        raise ErrExtNewsletterPostNotFound
+    post = current_app.mongodb_conn.NewsletterPost.\
+        find_one_by_post_id(post_id)
+    if not post:
+        raise PostNotFound
 
-    profile = current_app.mongodb_conn.NewsletterProfile.find_one_by_open_id(open_id)
-    print profile
-    req = parse_json()
-    test_email = [req.get_required_params('test_mail')]
-    # get email addresses and send emails
-    # if not isinstance(test_emails, list):
-    #     raise ErrExtNewsletterInvalidEmailAddresses
+    profile = current_app.mongodb_conn.Profile.\
+        find_one_by_open_id(g.current_user["open_id"])
 
     _send_mail(post, profile, test_email)
 
-    return post
+    return output_post(post)
+
 
 @output_json
-def newsletter_get_member_role():
-    open_id = g.current_user.get('open_id')
-    headers={
+def get_member_role():
+    headers = {
         "AppKey": current_app.config.get("APP_KEY"),
         "AppSecret": current_app.config.get("APP_SECRET"),
-        "Authorization": "Bearer {}".format(g.current_user.get("access_token"))
+        "Authorization": "Bearer {}".format(
+            g.current_user.get("access_token"))
     }
     get_member_role_url = current_app.config.get("ROLE_URL")
     resp = requests.get(get_member_role_url, headers=headers)
     print 'member_role:', resp.json()
-    # try:
-    #     resp.raise_for_status()
-    # except Exception as e:
-    #     raise SooproAPIError(e.args[0])
 
     return resp.json()
 
 
 def _get_member_by_roles(role_id):
-    headers={
+    headers = {
         "AppKey": current_app.config.get("APP_KEY"),
         "AppSecret": current_app.config.get("APP_SECRET"),
-        "Authorization": "Bearer {}".format(g.current_user.get("access_token"))
+        "Authorization": "Bearer {}".format(
+            g.current_user.get("access_token"))
     }
     params = {"role_id": role_id}
     get_member_url = current_app.config.get("MEMBER_URL")
@@ -235,7 +227,18 @@ def _send_mail(post, profile, to_email_list):
         current_app.mail_pusher.push_single_mail(mail)
     except Exception as e:
         current_app.logger.error(e)
-        raise ErrExtNewsletterSendErr
+        raise MailFailed
+
+
+def output_profile(post):
+    return {
+        "open_id": post["open_id"],
+        "host": post["host"],
+        "port": post["port"],
+        "username": post["username"],
+        "passwd": post["passwd"],
+        "use_tls": post["use_tls"],
+    }
 
 
 def output_post(post):
