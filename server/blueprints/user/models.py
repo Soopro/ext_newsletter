@@ -28,7 +28,7 @@ class User(Document):
         "creation": int,
     }
 
-    required_fields = ["open_id", "alias"]
+    required_fields = ["open_id"]
 
     default_values = {
         "updated": now,

@@ -11,9 +11,7 @@ from utils.request import get_param
 @output_json
 def get_profile():
     profile = current_app.mongodb_conn.Profile.\
-        find_one_by_open_id(g.current_user["open_id"])
-    if not profile:
-        raise ProfileNotFound
+        find_one_by_open_id(g.curr_user["open_id"])
 
     return output_profile(profile)
 
@@ -23,19 +21,17 @@ def create_profile():
     host = get_param("host", required=True)
     port = get_param("port", required=True)
     username = get_param("username", required=True)
-    passwd = get_param("passwd", required=True)
-    use_tls = get_param("use_tls", missing=False)
+    use_tls = get_param("use_tls", default=False)
 
     Profile = current_app.mongodb_conn.Profile
-    profile = Profile.find_one_by_open_id(g.current_user["open_id"])
+    profile = Profile.find_one_by_open_id(g.curr_user["open_id"])
     if profile:
         raise ProfileHasExisted
     profile = Profile()
-    profile["open_id"] = g.current_user["open_id"]
+    profile["open_id"] = g.curr_user["open_id"]
     profile["host"] = host
     profile["port"] = port
     profile["username"] = username
-    profile["passwd"] = passwd
     profile["use_tls"] = use_tls
     profile.save()
     return output_profile(profile)
@@ -46,17 +42,15 @@ def update_profile():
     host = get_param("host", required=True)
     port = get_param("port", required=True)
     username = get_param("username", required=True)
-    passwd = get_param("passwd", required=True)
-    use_tls = get_param("use_tls", missing=False)
+    use_tls = get_param("use_tls", default=False)
 
     profile = current_app.mongodb_conn.Profile.\
-        find_one_by_open_id(g.current_user["open_id"])
+        find_one_by_open_id(g.curr_user["open_id"])
     if not profile:
         raise ProfileNotFound
     profile["host"] = host
     profile["port"] = port
     profile["username"] = username
-    profile["passwd"] = passwd
     profile["use_tls"] = use_tls
     profile.save()
     return output_profile(profile)
@@ -64,32 +58,31 @@ def update_profile():
 
 @output_json
 def get_posts():
-    posts = current_app.mongodb_conn.NewsletterPost.\
-        find_all_by_open_id(g.current_user["open_id"])
+    posts = current_app.mongodb_conn.Post.\
+        find_all_by_open_id(g.curr_user["open_id"])
     return [output_post(post) for post in posts]
 
 
 @output_json
 def create_post():
-    user = g.current_user
+    user = g.curr_user
     open_id = user.get('open_id')
 
     title = get_param('title', required=True)
     content = get_param('content', required=True)
 
-    post = current_app.mongodb_conn.NewsletterPost()
+    post = current_app.mongodb_conn.Post()
     post["open_id"] = open_id
     post["title"] = title
     post["content"] = content
     post.save()
-
     return output_post(post)
 
 
 @output_json
 def get_post(post_id):
-    post = current_app.mongodb_conn.NewsletterPost.\
-        find_one_by_post_id(post_id)
+    post = current_app.mongodb_conn.Post.\
+        find_one_by_id_and_open_id(post_id, g.curr_user["open_id"])
     if not post:
         raise PostNotFound
 
@@ -98,16 +91,11 @@ def get_post(post_id):
 
 @output_json
 def update_post(post_id):
-    profile = current_app.mongodb_conn.Profile.\
-        find_one_by_open_id(g.current_user["open_id"])
-    if not profile:
-        raise ProfileNotFound
-
     title = get_param('title', required=True)
     content = get_param('content', required=True)
 
-    post = current_app.mongodb_conn.NewsletterPost.\
-        find_one_by_post_id(post_id)
+    post = current_app.mongodb_conn.Post.\
+        find_one_by_id_and_open_id(post_id, g.curr_user["open_id"])
     if post:
         raise PostNotFound
 
@@ -120,17 +108,10 @@ def update_post(post_id):
 
 @output_json
 def delete_post(post_id):
-    profile = current_app.mongodb_conn.Profile.\
-        find_one_by_open_id(g.current_user["open_id"])
-    if not profile:
-        raise ProfileNotFound
-
-    post_id = ObjectId(post_id)
-
-    post = current_app.mongodb_conn.NewsletterPost.\
-        find_one_by_post_id(post_id)
+    post = current_app.mongodb_conn.Post.\
+        find_one_by_id_and_open_id(post_id, g.curr_user["open_id"])
     if not post:
-        raise ErrExtNewsletterPostNotFound
+        raise ErrExtPostNotFound
 
     post.delete()
 
@@ -140,12 +121,12 @@ def delete_post(post_id):
 @output_json
 def send_post(post_id):
     profile = current_app.mongodb_conn.Profile.\
-        find_one_by_open_id(g.current_user["open_id"])
+        find_one_by_open_id(g.curr_user["open_id"])
     if not profile:
         raise ProfileNotFound
 
-    post = current_app.mongodb_conn.NewsletterPost.\
-        find_one_by_post_id(post_id)
+    post = current_app.mongodb_conn.Post.\
+        find_one_by_id_and_open_id(post_id, g.curr_user["open_id"])
     if not post:
         raise PostNotFound
 
@@ -170,13 +151,15 @@ def send_post(post_id):
 def send_test_post(post_id):
     test_email = get_param('test_mail', required=True)
 
-    post = current_app.mongodb_conn.NewsletterPost.\
-        find_one_by_post_id(post_id)
+    profile = current_app.mongodb_conn.Profile.\
+        find_one_by_open_id(g.curr_user["open_id"])
+    if not profile:
+        raise ProfileNotFound
+
+    post = current_app.mongodb_conn.Post.\
+        find_one_by_id_and_open_id(post_id, g.curr_user["open_id"])
     if not post:
         raise PostNotFound
-
-    profile = current_app.mongodb_conn.Profile.\
-        find_one_by_open_id(g.current_user["open_id"])
 
     _send_mail(post, profile, test_email)
 
@@ -185,30 +168,30 @@ def send_test_post(post_id):
 
 @output_json
 def get_member_role():
-    headers = {
-        "AppKey": current_app.config.get("APP_KEY"),
-        "AppSecret": current_app.config.get("APP_SECRET"),
-        "Authorization": "Bearer {}".format(
-            g.current_user.get("access_token"))
-    }
-    get_member_role_url = current_app.config.get("ROLE_URL")
-    resp = requests.get(get_member_role_url, headers=headers)
-    print 'member_role:', resp.json()
+    # headers = {
+    #     "AppKey": current_app.config.get("APP_KEY"),
+    #     "AppSecret": current_app.config.get("APP_SECRET"),
+    #     "Authorization": "Bearer {}".format(
+    #         g.curr_user.get("access_token"))
+    # }
+    # get_member_role_url = current_app.config.get("ROLE_URL")
+    # resp = requests.get(get_member_role_url, headers=headers)
 
-    return resp.json()
+    return []
 
 
 def _get_member_by_roles(role_id):
-    headers = {
-        "AppKey": current_app.config.get("APP_KEY"),
-        "AppSecret": current_app.config.get("APP_SECRET"),
-        "Authorization": "Bearer {}".format(
-            g.current_user.get("access_token"))
-    }
-    params = {"role_id": role_id}
-    get_member_url = current_app.config.get("MEMBER_URL")
-    resp = requests.get(get_member_url, headers=headers)
-    return resp.json()
+    # headers = {
+    #     "AppKey": current_app.config.get("APP_KEY"),
+    #     "AppSecret": current_app.config.get("APP_SECRET"),
+    #     "Authorization": "Bearer {}".format(
+    #         g.curr_user.get("access_token"))
+    # }
+    # params = {"role_id": role_id}
+    # get_member_url = current_app.config.get("MEMBER_URL")
+    # resp = requests.get(get_member_url, headers=headers, params=params)
+
+    return []
 
 
 def _send_mail(post, profile, to_email_list):
@@ -216,7 +199,6 @@ def _send_mail(post, profile, to_email_list):
         "host": profile["host"],
         "port": profile["port"],
         "username": profile["username"],
-        "passwd": profile["passwd"],
         "use_tls": profile["use_tls"],
         "from": profile["username"],
         "to": to_email_list,
@@ -230,15 +212,25 @@ def _send_mail(post, profile, to_email_list):
         raise MailFailed
 
 
-def output_profile(post):
-    return {
-        "open_id": post["open_id"],
-        "host": post["host"],
-        "port": post["port"],
-        "username": post["username"],
-        "passwd": post["passwd"],
-        "use_tls": post["use_tls"],
-    }
+def output_profile(profile):
+    if profile:
+        return {
+            "id": profile["_id"],
+            "open_id": profile["open_id"],
+            "host": profile["host"],
+            "port": profile["port"],
+            "username": profile["username"],
+            "use_tls": profile["use_tls"],
+        }
+    else:
+        return {
+            "id": u'',
+            "open_id": u'',
+            "host": u'',
+            "port": u'',
+            "username": u'',
+            "use_tls": u'',
+        }
 
 
 def output_post(post):

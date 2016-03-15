@@ -8,13 +8,13 @@ if (sup_ext_newsletter == 'undefined' || !sup_ext_newsletter){
 
 
 var test = {
-  'api': "http://127.0.0.1:5001/newsletter",
-  'auth_api': "http://127.0.0.1:5001/user",
+  'api': "http://127.0.0.1:5003/newsletter",
+  'auth_api': "http://127.0.0.1:5003/user",
 };
 
 var dev = {
-  'api': "http://127.0.0.1:5001/newsletter",
-  'auth_api': "http://127.0.0.1:5001/user",
+  'api': "http://127.0.0.1:5003/newsletter",
+  'auth_api': "http://127.0.0.1:5003/user",
 };
 
 var prd = {

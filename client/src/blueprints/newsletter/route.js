@@ -12,17 +12,17 @@ angular.module('newsletter')
     $routeProvider
     
     .when('/' + bp + '/profile', {
-      templateUrl: "views/newsletter/profile.html",
+      templateUrl: dir + "/profile.html",
       controller: "profileCtrl"
     })
     
     .when('/' + bp + '/posts', {
-      templateUrl: "views/newsletter/posts.html",
+      templateUrl: dir + "/posts.html",
       controller: "postsCtrl"
     })
     
     .when('/' + bp + '/edit_post/:post_id', {
-      templateUrl: "views/newsletter/edit.html",
+      templateUrl: dir + "/edit.html",
       controller: "postCtrl"
     });
   }

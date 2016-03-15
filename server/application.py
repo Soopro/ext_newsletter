@@ -57,7 +57,7 @@ def create_app(config_name='dev'):
 
     # register blueprints
     from blueprints.user import blueprint as user_module
-    app.register_blueprint(user_module, url_prefix="/newsletter/user")
+    app.register_blueprint(user_module, url_prefix="/user")
 
     from blueprints.newsletter import blueprint as newsletter_module
     app.register_blueprint(newsletter_module, url_prefix="/newsletter")

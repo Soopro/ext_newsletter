@@ -6,7 +6,7 @@ from datetime import datetime
 NewsletterDeactivated, NewsletterActivated = xrange(2)
 
 
-class NewsletterPost(Document):
+class Post(Document):
     __collection__ = "post"
 
     structure = {
@@ -28,20 +28,21 @@ class NewsletterPost(Document):
 
     def find_all_by_open_id(self, open_id):
         return self.find({
-            "open_id": ObjectId("open_id")
+            "open_id": open_id
         })
 
-    def find_one_by_post_id(self, post_id):
+    def find_one_by_id_and_open_id(self, id, open_id):
         return self.find_one({
-            "_id": ObjectId(post_id)
+            "_id": ObjectId(id),
+            "open_id": open_id
         })
 
 
-NewsletterHistoryProcessUnsent, NewsletterHistoryProcessSending,\
-    NewsletterHistoryProcessSent = xrange(3)
+HistoryProcessUnsent, HistoryProcessSending,\
+    HistoryProcessSent = xrange(3)
 
 
-class NewsletterHistory(Document):
+class History(Document):
     __collection__ = "history"
 
     structure = {
@@ -69,11 +70,10 @@ class Profile(Document):
         "host": unicode,
         "port": int,
         "username": unicode,
-        "passwd": unicode,
         "use_tls": bool,
     }
 
-    required_fields = ["host", "port", "username", "passwd", "use_tls"]
+    required_fields = ["host", "port", "username", "use_tls"]
 
     indexes = [
         {
@@ -83,4 +83,6 @@ class Profile(Document):
     ]
 
     def find_one_by_open_id(self, open_id):
-        return self.find_one({"open_id": open_id})
+        return self.find_one({
+            "open_id": open_id
+        })

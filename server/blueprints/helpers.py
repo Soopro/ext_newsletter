@@ -11,6 +11,7 @@ def verify_token():
         user = User.find_one()
         if not user:
             user = User()
+            user['open_id'] = u'test_open_id'
             user.save()
         g.curr_user = user
     else:

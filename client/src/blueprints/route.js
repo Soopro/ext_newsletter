@@ -14,6 +14,10 @@ angular.module('newsletter')
       redirectTo: '/auth'
     })
     
+    .when('/dashboard', {
+      redirectTo: '/newsletter/profile'
+    })
+    
     .when('/404', {
       templateUrl: 'blueprints/404.html'
     })

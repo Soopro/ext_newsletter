@@ -1,11 +1,11 @@
 angular.module('newsletter')
 
-.factory('restFwd', [
-  '$resource',
+.factory('restNL', [
+  'supResource',
   'Config',
 
   function (
-    $resource,
+    supResource,
     Config
   ){
     'use strict';
@@ -14,11 +14,11 @@ angular.module('newsletter')
     
 
     var res = {
-      profile: $resource(api+"/profile"),
-      posts: $resource(api+"/posts/:post_id"),
-      mail: $resource(api+"/posts/:post_id/mail"),
-      mailTest: $resource(api+"/posts/:post_id/mail_test"),
-      memberRoles: $resource(api+"/member_roles")
+      profile: supResource(api+"/profile"),
+      posts: supResource(api+"/posts/:post_id"),
+      mail: supResource(api+"/posts/:post_id/mail"),
+      mailTest: supResource(api+"/posts/:post_id/mail_test"),
+      memberRoles: supResource(api+"/member_roles")
     };
   
     return res;

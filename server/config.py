@@ -24,6 +24,9 @@ class Config(object):
     OAUTH_TOKEN_API_URI = 'http://localhost:5000/oauth/token'
     OAUTH_REDIRECT_URI = 'http://localhost:8888/#/auth/redirect'
 
+    MEMBER_URL = "http://api.soopro.com/crm/member"
+    ROLE_URL = "http://api.soopro.com/crm/role"
+
 
 class DevelopmentConfig(Config):
     DB_DBNAME = 'ext_newsletter_dev'

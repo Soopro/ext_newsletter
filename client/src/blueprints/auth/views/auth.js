@@ -8,7 +8,6 @@ angular.module('newsletter')
   'Auth',
   'restUser',
   'Config',
-
   function(
     $scope,
     $window,
@@ -66,7 +65,7 @@ angular.module('newsletter')
         if (data.error) {
           get_token()
         } else {
-          $location.url('/newsletter')
+          $location.url('/dashboard')
         }
       })
     }
