@@ -1,11 +1,12 @@
 # coding=utf-8
-from flask import current_app, g
-from mongokit import ObjectId
-import requests
+from __future__ import absolute_import
 
+from flask import current_app, g
 from .errors import *
 from utils.api_utils import output_json
 from utils.request import get_param
+from datetime import datetime
+from services.mail import MailSender
 
 
 @output_json
@@ -96,11 +97,12 @@ def update_post(post_id):
 
     post = current_app.mongodb_conn.Post.\
         find_one_by_id_and_open_id(post_id, g.curr_user["open_id"])
-    if post:
+    if not post:
         raise PostNotFound
 
     post["title"] = title
     post["content"] = content
+    post["update_time"] = datetime.utcnow
     post.save()
 
     return output_post(post)
@@ -120,6 +122,9 @@ def delete_post(post_id):
 
 @output_json
 def send_post(post_id):
+    role_id = get_param('selected_role', required=True)
+    password = get_param('password', required=True)
+
     profile = current_app.mongodb_conn.Profile.\
         find_one_by_open_id(g.curr_user["open_id"])
     if not profile:
@@ -129,9 +134,6 @@ def send_post(post_id):
         find_one_by_id_and_open_id(post_id, g.curr_user["open_id"])
     if not post:
         raise PostNotFound
-
-    req = parse_json()
-    role_id = req.get_required_params('selected_role').get("id")
 
     members = _get_member_by_roles(role_id)
     print "members:", members
@@ -141,7 +143,7 @@ def send_post(post_id):
     # get email addresses and send emails
     # todo get emails from member ids
 
-    _send_mail(post, profile, to)
+    _send_mail(post, profile, password, to)
     # todo send history
 
     return output_post(post)
@@ -150,6 +152,7 @@ def send_post(post_id):
 @output_json
 def send_test_post(post_id):
     test_email = get_param('test_mail', required=True)
+    password = get_param('password', required=True)
 
     profile = current_app.mongodb_conn.Profile.\
         find_one_by_open_id(g.curr_user["open_id"])
@@ -161,7 +164,7 @@ def send_test_post(post_id):
     if not post:
         raise PostNotFound
 
-    _send_mail(post, profile, test_email)
+    _send_mail(post, profile, password, test_email)
 
     return output_post(post)
 
@@ -194,43 +197,42 @@ def _get_member_by_roles(role_id):
     return []
 
 
-def _send_mail(post, profile, to_email_list):
-    mail = {
-        "host": profile["host"],
-        "port": profile["port"],
-        "username": profile["username"],
-        "use_tls": profile["use_tls"],
-        "from": profile["username"],
-        "to": to_email_list,
-        "subject": post["title"],
-        "body": post["content"],
-    }
+def _send_mail(post, profile, password, to_email):
+    smtp_host = profile["host"]
+    smtp_user = profile["username"]
+    from_email = profile["username"]
+    to_email = to_email if isinstance(to_email, list)\
+        else [email.strip() for email in to_email.split(',')]
+    sender = MailSender(smtp_host, smtp_user, password)
+
+    subject = post["title"]
+    body = post["content"]
     try:
-        current_app.mail_pusher.push_single_mail(mail)
+        sender.send(from_email,
+                    to_email,
+                    subject,
+                    body)
     except Exception as e:
         current_app.logger.error(e)
         raise MailFailed
 
 
 def output_profile(profile):
-    if profile:
-        return {
-            "id": profile["_id"],
-            "open_id": profile["open_id"],
-            "host": profile["host"],
-            "port": profile["port"],
-            "username": profile["username"],
-            "use_tls": profile["use_tls"],
-        }
-    else:
-        return {
-            "id": u'',
-            "open_id": u'',
-            "host": u'',
-            "port": u'',
-            "username": u'',
-            "use_tls": u'',
-        }
+    return {
+        "id": profile["_id"],
+        "open_id": profile["open_id"],
+        "host": profile["host"],
+        "port": profile["port"],
+        "username": profile["username"],
+        "use_tls": profile["use_tls"],
+    } if profile else {
+        "id": u'',
+        "open_id": u'',
+        "host": u'',
+        "port": u'',
+        "username": u'',
+        "use_tls": u'',
+    }
 
 
 def output_post(post):
@@ -238,4 +240,5 @@ def output_post(post):
         "id": post["_id"],
         "title": post["title"],
         "content": post["content"],
+        "update_time": post["update_time"]
     }

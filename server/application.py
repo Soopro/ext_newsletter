@@ -15,7 +15,6 @@ from apiresps.errors import (NotFound,
                              UncaughtException)
 
 from services.sup_oauth import SupOAuth
-from services.mail import MailQueuePusher
 
 
 __version_info__ = ('0', '1', '5')
@@ -24,7 +23,7 @@ __version__ = '.'.join(__version_info__)
 __artisan__ = ['Majik']
 
 
-def create_app(config_name='dev'):
+def create_app(config_name='development'):
     app = Flask(__name__)
 
     app.version = __version__
@@ -50,7 +49,6 @@ def create_app(config_name='dev'):
                             expired_in=app.config.get("OAUTH_EXPIRED_IN"))
 
     app.redis = Redis()
-    app.mail_pusher = MailQueuePusher(app.redis, True)
 
     from blueprints.user.models import User
     app.mongodb_database.register([User])

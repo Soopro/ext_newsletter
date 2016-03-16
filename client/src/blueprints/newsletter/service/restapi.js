@@ -16,8 +16,12 @@ angular.module('newsletter')
     var res = {
       profile: supResource(api+"/profile"),
       posts: supResource(api+"/posts/:post_id"),
-      mail: supResource(api+"/posts/:post_id/mail"),
-      mailTest: supResource(api+"/posts/:post_id/mail_test"),
+      mail: supResource(api+"/posts/:post_id/mail", null, {
+        send: { method: "POST" }
+      }),
+      mailTest: supResource(api+"/posts/:post_id/mail_test", null, {
+        send: { method: "POST" }
+      }),
       memberRoles: supResource(api+"/member_roles")
     };
   

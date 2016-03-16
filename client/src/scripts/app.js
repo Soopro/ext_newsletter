@@ -1,5 +1,6 @@
 angular.module("newsletter", [
-  "ngRoute", 
+  "ngMaterial",
+  "ngRoute",
   "ngCookies", 
   "ngResource", 
   "supResource"

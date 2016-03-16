@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 
 from application import create_app
+from services.mail import MailQueueWatcher
 import argparse
 
 parser = argparse.ArgumentParser(
@@ -23,6 +24,9 @@ args, unknown = parser.parse_known_args()
 
 app = create_app(args.server_mode or "development")
 
-
 if __name__ == "__main__":
-    app.run(debug=True, threaded=True, port=5003)
+    app = create_app()
+    with app.app_context():
+        rds_conn = app.redis
+        watcher = MailQueueWatcher(rds_conn)
+        watcher.watch()

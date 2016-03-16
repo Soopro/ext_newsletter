@@ -37,10 +37,16 @@
         <button ng-click="delete_post()" class="btn btn-default btn-wider" 
          ng-if="!is_new">删除</button>
         <div class="form-group">
+          <label>密码:</label>
+          <input ng-model="password" placeholder="Input Password" 
+           class="form-control" type="password"/>
+        </div>
+        <div class="form-group">
           <label>测试发送:</label>
           <input ng-model="test_email" placeholder="Input test Email Address" 
            class="form-control"/>
-          <button ng-click="send_test_post()" ng-disabled="!test_email"
+          <button ng-disabled="!test_email || !password" 
+           ng-click="send_test_post()" 
            class="btn btn-default btn-wider">测试发送</button>
         </div>
       </div>
@@ -51,7 +57,8 @@
         <select ng-model="selected_role"
          ng-options="role.title for role in role_list" 
          class="form-control"></select>
-        <button ng-click="send_post()" class="btn btn-default btn-wider">
+        <button ng-disabled="!password" 
+        class="btn btn-default btn-wider" ng-click="send_post()">
           发送
         </button>
       </div>
