@@ -102,7 +102,7 @@ def update_post(post_id):
 
     post["title"] = title
     post["content"] = content
-    post["update_time"] = datetime.utcnow
+    post["update_time"] = datetime.utcnow()
     post.save()
 
     return output_post(post)
@@ -199,11 +199,14 @@ def _get_member_by_roles(role_id):
 
 def _send_mail(post, profile, password, to_email):
     smtp_host = profile["host"]
+    smtp_port = profile["port"]
     smtp_user = profile["username"]
     from_email = profile["username"]
+    is_with_tls = profile["use_tls"]
     to_email = to_email if isinstance(to_email, list)\
         else [email.strip() for email in to_email.split(',')]
-    sender = MailSender(smtp_host, smtp_user, password)
+    sender = MailSender(smtp_host, smtp_user, password,
+                        smtp_port=smtp_port, is_with_tls=is_with_tls)
 
     subject = post["title"]
     body = post["content"]

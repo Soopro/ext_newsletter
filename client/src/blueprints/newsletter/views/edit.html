@@ -36,31 +36,31 @@
         </div>
         <button ng-click="delete_post()" class="btn btn-default btn-wider" 
          ng-if="!is_new">删除</button>
-        <div class="form-group">
-          <label>密码:</label>
-          <input ng-model="password" placeholder="Input Password" 
-           class="form-control" type="password"/>
+        <div ng-if="!is_new">
+          <div class="form-group">
+            <label>密码:</label>
+            <input ng-model="password" placeholder="Input Password" 
+             class="form-control" type="password"/>
+          </div>
+          <div class="form-group">
+            <label>测试发送:</label>
+            <input ng-model="test_email" class="form-control"
+             placeholder="Input test Email Address"/>
+            <button ng-disabled="!test_email || !password" 
+             ng-click="send_test_post(test_email, password)" 
+             class="btn btn-default btn-wider">测试发送</button>
+          </div>
+          <div class="form-group">
+            <h3>发送给</h3>
+            <select ng-model="selected_role"
+             ng-options="role.title for role in role_list" 
+             class="form-control"></select>
+            <button ng-disabled="!password" 
+            class="btn btn-default btn-wider" ng-click="send_post()">
+              发送
+            </button>
+          </div>
         </div>
-        <div class="form-group">
-          <label>测试发送:</label>
-          <input ng-model="test_email" placeholder="Input test Email Address" 
-           class="form-control"/>
-          <button ng-disabled="!test_email || !password" 
-           ng-click="send_test_post()" 
-           class="btn btn-default btn-wider">测试发送</button>
-        </div>
-      </div>
-    </div>
-    <div ng-if="!is_new" class="row">
-      <div class="col-md-8 col-md-offset-2">
-        <h3>发送给</h3>
-        <select ng-model="selected_role"
-         ng-options="role.title for role in role_list" 
-         class="form-control"></select>
-        <button ng-disabled="!password" 
-        class="btn btn-default btn-wider" ng-click="send_post()">
-          发送
-        </button>
       </div>
     </div>
   </section>

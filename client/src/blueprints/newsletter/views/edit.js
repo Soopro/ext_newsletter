@@ -8,6 +8,7 @@ angular.module("newsletter")
   "$routeParams", 
   "$location", 
   "$mdDialog",
+  
   function(
     $rootScope, 
     $scope, 
@@ -39,12 +40,17 @@ angular.module("newsletter")
       $scope.post.$delete({post_id: $scope.post.id});
       $location.path("/newsletter/posts");
     };
-    $scope.send_test_post = function() {
+    $scope.send_test_post = function(email, password) {
+      console.log(email);
+      console.log(password);
+      console.log($scope.post.id);
       restNL.mailTest.send({
         post_id: $scope.post.id
       }, {
-        test_mail: $scope.test_email,
-        password: $scope.password
+        test_mail: email,
+        password: password
+      }).$promise.then(function(data){
+        console.log(data);
       });
     };
     $scope.send_post = function() {

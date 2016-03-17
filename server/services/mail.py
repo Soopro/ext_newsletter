@@ -33,7 +33,8 @@ class MailSender(object):
             msg[headername] = headervalue
         return msg
 
-    def __init__(self, smtp_server=None, smtp_user=None, smtp_password=None):
+    def __init__(self, smtp_server, smtp_user, smtp_password,
+                 smtp_port=25, is_with_tls=False):
 
         """
         Initial with smtp_user and password
@@ -49,11 +50,13 @@ class MailSender(object):
 
         """
         self.smtp_server = smtp_server
+        self.smtp_port = smtp_port
         self.smtp_user = smtp_user
         self.smtp_password = smtp_password
+        self.is_with_tls = is_with_tls
 
-    def send(self, mail_from, mail_to_list, mail_subject, mail_body,
-             mime_type="html", is_with_tls=False):
+    def send(self, mail_from, mail_to_list,
+             mail_subject, mail_body, mime_type="html"):
         """
         send mail to dest recipients
 
@@ -75,7 +78,6 @@ class MailSender(object):
         plaintext = MIMEText(mail_body, mime_type, 'utf-8')
 
         msg.attach(plaintext)
-
         msg["From"] = mail_from
         msg['BCC'] = ', '.join(mail_to_list)
         if len(mail_to_list) is 1:
@@ -95,12 +97,11 @@ class MailSender(object):
             logging.error("no smtp password provider.")
             return
         try:
-            server = smtplib.SMTP(self.smtp_server)
-            if is_with_tls:
+            if self.is_with_tls:
+                server = smtplib.SMTP(self.smtp_server)
                 server.starttls()
-            print msg['from']
-            print mail_to_list
-            print msg.as_string()
+            else:
+                server = smtplib.SMTP(self.smtp_server)
             server.login(self.smtp_user, self.smtp_password)    # optional
             server.sendmail(msg['from'], mail_to_list, msg.as_string())
             server.close()
