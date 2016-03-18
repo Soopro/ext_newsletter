@@ -8,45 +8,48 @@ angular.module('newsletter')
   'Auth',
   'restUser',
   'Config',
+
   function(
     $scope,
     $window,
     $location,
     $routeParams,
     Auth,
-    restApi,
+    restUser,
     Config
   ){
     'use strict';
-    
-    var open_id = $routeParams.open_id;
-    
-    $scope.open_id = open_id
+
+    $scope.open_id = $routeParams.open_id;
+    if (!$scope.open_id || typeof($scope.open_id) != 'string'){
+      console.error('Open id is required!')
+      $location.path(Config.route.error)
+      return;
+    }
 
     // get remote redirect info from ext server.
-    function get_token () {
+    function get_token (open_id) {
       if (open_id) {
         
         Auth.clean();
         Auth.set_open_id(open_id);
-
-        var token = new restApi.ext_token({open_id: open_id})
         
-        token.$get()
+        var auth = new restUser.auth({open_id: open_id})
+        
+        auth.$get()
         .then(function (data) {
           if (data.state) {
-            var redirect_uri = encodeURIComponent(data.redirect_uri)
-              
             $window.location = data.auth_uri +
             '?open_id=' + open_id +
             '&state=' + data.state +
             '&ext_key=' + data.ext_key +
             '&response_type=' + data.response_type +
-            '&redirect_uri=' + redirect_uri;
+            '&redirect_uri=' + encodeURIComponent(data.redirect_uri);
           }
         })
 				.catch(function (data) {
 					console.error(data)
+          $location.path(Config.route.error)
 				})
       }
     };
@@ -55,17 +58,17 @@ angular.module('newsletter')
     var ext_token = Auth.get_token();
 
     if (!ext_token) {
-      get_token()
+      get_token($scope.open_id)
     } else {
-      var token = new restApi.check({
-        ext_token: ext_token
+      var token = new restUser.checker({
+        open_id: $scope.open_id
       })
       token.$check()
       .then(function (data){
-        if (data.error) {
-          get_token()
+        if (data.result) {
+          $location.url(Config.route.index)
         } else {
-          $location.url('/dashboard')
+          get_token()
         }
       })
     }

@@ -13,11 +13,11 @@ angular.module('newsletter')
 
     $routeProvider
     .when('/'+bp, {
-      templateUrl: dir+'/auth.html',
+      template: '',
       controller: 'authCtrl'
     })
     .when('/'+bp+'/redirect', {
-      templateUrl: dir+'/redirect.html',
+      template: '',
       controller: 'authRedirectCtrl'
     })
   }

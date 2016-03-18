@@ -4,7 +4,6 @@ from __future__ import absolute_import
 from functools import partial
 from werkzeug.datastructures import ImmutableDict
 from werkzeug.utils import secure_filename
-from functools import cmp_to_key
 from bson import ObjectId
 import re
 import time
@@ -15,6 +14,7 @@ import mimetypes
 
 
 class DottedImmutableDict(ImmutableDict):
+
     def __getattr__(self, item):
         try:
             v = self.__getitem__(item)
@@ -27,6 +27,7 @@ class DottedImmutableDict(ImmutableDict):
 
 
 class NamedPartial(partial):
+
     @property
     def __name__(self):
         return self.func.__name__
@@ -64,6 +65,15 @@ def pre_process_alias(alias, validator=None, required=True):
         validator(alias, name='_alias_', non_empty=required)
 
     return alias
+
+
+def pre_process_scope(*keys):
+    scope = u''
+    for key in keys:
+        if not key or not isinstance(key, basestring):
+            return None
+        scope = u'{}/{}'.format(scope, key)
+    return scope.strip('/')
 
 
 def safe_cast(val, to_type, default=None):
@@ -129,6 +139,9 @@ def safe_regex_str(val):
     return val
 
 
+from functools import cmp_to_key
+
+
 def sortedby(source, sort_keys, reverse=False):
     keys = {}
 
@@ -190,7 +203,7 @@ def version_str_to_list(str_version):
 
 def version_list_to_str(list_version):
     try:
-        list_version += [0, 0, 0]   # ensure has 3 items
+        list_version += [0, 0, 0]  # ensure has 3 items
         list_version = list_version[0:3]
         version = '.'.join(map(str, list_version))
     except:

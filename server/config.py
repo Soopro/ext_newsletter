@@ -1,6 +1,8 @@
 # coding=utf-8
 from __future__ import absolute_import
 
+from datetime import timedelta
+
 
 class Config(object):
     DEBUG = True
@@ -14,11 +16,9 @@ class Config(object):
     ALLOW_ORIGINS = ['*']
     ALLOW_CREDENTIALS = False
 
-    OAUTH_GRANT_TYPE = 'code'
-    OAUTH_EXPIRED_IN = 36000
-
     EXT_KEY = 'url4cc-1453895893'
     EXT_SECRET = '38a6daf0-a718-4456-938f-c6ab2ad03456'
+    EXPIRES_IN = timedelta(seconds=3600 * 24 * 30)
 
     OAUTH_PAGE_URI = 'http://sup.local:9527/#/oauth'
     OAUTH_TOKEN_API_URI = 'http://localhost:5000/oauth/token'

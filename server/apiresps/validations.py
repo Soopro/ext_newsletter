@@ -113,9 +113,8 @@ class ParamStructure(object):
             raise ValidationParameterInvalidObjectType(self.name)
 
     def _validate_non_empty(self):
-        if not bool(self.value)\
-           and self.value is not 0\
-           and self.value is not False:
+        if not bool(self.value) and self.value is not 0 \
+                and self.value is not False:
             raise ValidationParameterBlank(self.name)
 
     def _validate_len_min(self):
@@ -140,8 +139,9 @@ class ParamStructure(object):
     def pre_handler(self):
         return self.value
 
-
 # Parameter structure preset
+
+
 class ObjectIdStructure(ParamStructure):
     format_ObjectId = True
 

@@ -8,7 +8,7 @@ from apiresps import APIError
 from utils.helpers import route_inject
 from utils.api_utils import make_json_response
 
-from .models import User
+from .models import ExtUser
 from .routes import urlpatterns
 
 from ..helpers import verify_token
@@ -16,9 +16,8 @@ from ..helpers import verify_token
 bp_name = "user"
 
 open_api_endpoints = [
-    "{}.get_new_ext_token".format(bp_name),
-    "{}.get_sup_token".format(bp_name),
-    "{}.token_check".format(bp_name)
+    "{}.get_oauth_access_code".format(bp_name),
+    "{}.get_oauth_access_token".format(bp_name)
 ]
 
 blueprint = Blueprint(bp_name, __name__)
@@ -28,7 +27,7 @@ route_inject(blueprint, urlpatterns)
 
 @blueprint.before_app_first_request
 def before_first_request():
-    current_app.mongodb_database.register(User)
+    current_app.mongodb_database.register(ExtUser)
 
 
 @blueprint.before_request

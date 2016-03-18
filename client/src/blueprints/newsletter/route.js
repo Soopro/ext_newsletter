@@ -11,6 +11,10 @@ angular.module('newsletter')
 
     $routeProvider
     
+    .when('/' + bp + '/', {
+      redirectTo: '/' + bp + '/posts'
+    })
+    
     .when('/' + bp + '/profile', {
       templateUrl: dir + "/profile.html",
       controller: "profileCtrl"

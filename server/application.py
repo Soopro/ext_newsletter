@@ -40,18 +40,20 @@ def create_app(config_name='development'):
     app.mongodb_conn = app.mongodb_database[
         app.config.get("DB_DBNAME")]
 
-    app.sup_auth = SupOAuth(ext_key=app.config.get("EXT_KEY"),
-                            ext_secret=app.config.get("EXT_SECRET"),
-                            grant_type=app.config.get("OAUTH_GRANT_TYPE"),
-                            secret_key=app.config.get("SECRET_KEY"),
-                            token_uri=app.config.get("OAUTH_TOKEN_API_URI"),
-                            redirect_uri=app.config.get("OAUTH_REDIRECT_URI"),
-                            expired_in=app.config.get("OAUTH_EXPIRED_IN"))
+    app.sup_oauth = SupOAuth(
+        ext_key=app.config.get("EXT_KEY"),
+        ext_secret=app.config.get("EXT_SECRET"),
+        secret_key=app.config.get("SECRET_KEY"),
+        expires_in=app.config.get("EXPIRES_IN"),
+        api_uri=app.config.get("OAUTH_API_URI"),
+        token_uri=app.config.get("OAUTH_TOKEN_API_URI"),
+        redirect_uri=app.config.get("OAUTH_REDIRECT_URI")
+    )
 
     app.redis = Redis()
 
-    from blueprints.user.models import User
-    app.mongodb_database.register([User])
+    from blueprints.user.models import ExtUser
+    app.mongodb_database.register([ExtUser])
 
     # register blueprints
     from blueprints.user import blueprint as user_module

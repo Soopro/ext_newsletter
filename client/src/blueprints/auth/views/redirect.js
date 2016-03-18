@@ -4,33 +4,37 @@ angular.module('newsletter')
   '$routeParams',
   '$location',
   'Auth',
-  'restApi',
+  'restUser',
+  'Config',
 
   function(
     $routeParams,
     $location,
     Auth,
-    restApi
+    restUser,
+    Config
   ){
     'use strict';
 
     if ($routeParams.code && $routeParams.state) {
+      console.log($routeParams.code)
+      console.log($routeParams.state)
       var params = {
         code: $routeParams.code,
         open_id: Auth.get_open_id(),
         state: $routeParams.state
-      };
-      console.log(params)
-
-      restApi.sup_auth.save({},params)
-      .$promise
+      }
+      var auth = new restUser.auth(params)
+      
+      auth.$access()
       .then(function (data) {
         console.log(data);
         Auth.set_token(data.ext_token);
-        $location.url("/")
+        $location.path(Config.route.index);
       })
     } else {
-      alert("code and state is required!")
+      console.error("code and state is required!")
+      $location.path(Config.route.error)
     }
   }
 ])

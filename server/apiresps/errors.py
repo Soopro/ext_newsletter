@@ -1,7 +1,7 @@
 # coding=utf-8
 from __future__ import absolute_import
-import httplib
 
+import httplib
 from .base import APIError
 
 
@@ -106,17 +106,6 @@ class ValidationError(Unexpected):
     status_message = 'INVALID_DATA'
 
 
-# app
-class AppNotFoundOrNotOwner(NotFound):
-    response_code = 108001
-    status_message = "APP_NOT_FOUND"
-
-
-class AppTrunkNotFound(NotFound):
-    response_code = 108002
-    status_message = "APP_TRUNK_NOT_FOUND"
-
-
 # user
 class UserNotFound(NotFound):
     response_code = 109001
@@ -131,22 +120,6 @@ class UserInactive(PermissionDenied):
 class OAuth2PermissionDenied(PermissionDenied):
     status_message = 'OAUTH2_FORBIDDEN'
     response_code = 109003
-
-
-# customer
-class CustomerNotFound(NotFound):
-    response_code = 110001
-    status_message = 'CUSTOMER_NOT_FOUND'
-
-
-class CustomerAlreadyExist(ConflictError):
-    response_code = 110002
-    status_message = 'CUSTOMER_ALREADY_EXIST'
-
-
-class CreateCustomerFailed(Unexpected):
-    response_code = 110003
-    status_message = 'CREATE_CUSTOMER_FAILED'
 
 
 # file
@@ -173,199 +146,3 @@ class FileExist(ConflictError):
 class FileNameInvalid(BadRequest):
     response_code = 111005
     status_message = 'EMPTY_NAME_INVALID'
-
-
-# theme
-class ThemeNotFound(NotFound):
-    status_code = httplib.NOT_FOUND
-    response_code = 112001
-    status_message = "THEME_NOT_FOUND"
-
-
-class ThemeInvalidUploadFile(BadRequest):
-    response_code = 112002
-    status_message = "THEME_UPLOAD_FILE_FAILED"
-
-
-class ThemeUploadBadZipFile(BadRequest):
-    response_code = 112003
-    status_message = "THEME_INVALID_ZIP_FILE"
-
-
-class ThemeCustomFolderNotExist(NotFound):
-    response_code = 112004
-    status_message = "CUSTOM_THEME_NOT_FOUND"
-
-
-class ThemeCustomRemoveFailed(InternalServerError):
-    response_code = 112005
-    status_message = "CUSTOM_THEME_REMOVE_FAILED"
-
-
-class ThemeConfigInvalid(InternalServerError):
-    response_code = 112006
-    status_message = "THEME_CONFIG_INVALID"
-
-
-class ThemeTemplateFileNotFound(NotFound):
-    response_code = 112007
-    status_message = "TEMPLATE_FILE_NOT_FOUND"
-
-
-class ThemeTemplateFileInvalid(Unexpected):
-    response_code = 112008
-    status_message = "TEMPLATE_FILE_INVALID"
-
-
-class ThemeTemplateFileCircularInclude(InternalServerError):
-    response_code = 112009
-    status_message = "TEMPLATE_FILE_CIRCULAR_INCLUDE"
-
-
-class ThemeTemplateFileSizeTooLarge(Unexpected):
-    response_code = 112010
-    status_message = "TEMPLATE_FILE_SIZE_TOO_LARGE"
-
-
-class ThemeTemplateOverload(Unexpected):
-    response_code = 112011
-    status_message = "TEMPLATE_OVERLOAD"
-
-
-class ThemePresetsInvalid(InternalServerError):
-    response_code = 112012
-    status_message = "THEME_PRESETS_INVALID"
-
-
-class ThemeContextInvalid(InternalServerError):
-    response_code = 112013
-    status_message = "THEME_CONTEXT_INVALID"
-
-
-class ThemeTranslatesInvalid(InternalServerError):
-    response_code = 112014
-    status_message = "THEME_TRANSLATES_INVALID"
-
-
-# extension
-class ExtensionNotFound(NotFound):
-    response_code = 113001
-    status_message = "EXTENSION_NOT_FOUND"
-
-
-class ExtensionMaxLimited(BadRequest):
-    response_code = 113002
-    status_message = "EXTENSION_NUM_REACHES_MAX_LIMIT"
-
-
-class ExtensionAlreadyActivated(ConflictError):
-    response_code = 113003
-    status_message = "EXTENSION_ALREADY_ACTIVATED"
-
-
-class ExtensionNotActivated(PermissionDenied):
-    response_code = 113004
-    status_message = "EXTENSION_NOT_ACTIVATED"
-
-
-class ExtensionInvalidUploadFileFailed(BadRequest):
-    response_code = 113005
-    status_message = "EXTENSION_UPLOAD_FILE_FAILED"
-
-
-class ExtensionConfigInvalid(InternalServerError):
-    response_code = 113006
-    status_message = "EXTENSION_CONFIG_INVALID"
-
-
-class ExtensionNotPurchased(NotFound):
-    response_code = 113007
-    status_message = "EXTENSION_NOT_PURCHASED"
-
-
-class ExtensionNotInstallable(InternalServerError):
-    response_code = 113008
-    status_message = "EXTENSION_NOT_INSTALLABLE"
-
-
-class ExtensionInvalidSlots(InternalServerError):
-    response_code = 113009
-    status_message = "EXTENSION_BAD_SLOTS"
-
-
-# content
-class ContentNotFound(NotFound):
-    response_code = 114001
-    status_message = "CONTENT_NOT_FOUND"
-
-
-class ContentExists(ConflictError):
-    response_code = 114002
-    status_message = "CONTENT_EXISTS"
-
-
-class ContentFileNotAllowed(MethodNotAllowed):
-    response_code = 114003
-    status_message = "CONTENT_NOT_ALLOWED"
-
-
-class ContentTypeNotFound(NotFound):
-    response_code = 114004
-    status_message = "CONTENT_TYPE_NOT_FOUND"
-
-
-class ContentTypeExists(ConflictError):
-    response_code = 114005
-    status_message = "CONTENT_TYPE_EXISTS"
-
-
-class ContentTypeNotAllowed(MethodNotAllowed):
-    response_code = 114006
-    status_message = "CONTENT_TYPE_NOT_ALLOWED"
-
-
-class ContentNotEnoughStorage(MethodNotAllowed):
-    response_code = 114007
-    status_message = "CONTENT_NOT_ENOUGH_STORAGE"
-
-
-class ContentNotEnoughLiveStorage(MethodNotAllowed):
-    response_code = 114008
-    status_message = "CONTENT_NOT_ENOUGH_LIVE_STORAGE"
-
-
-# taxonomy
-class TaxonomyNotFound(NotFound):
-    response_code = 115001
-    status_message = "TEXONOMY_NOT_FOUND"
-
-
-class TaxonomyExists(ConflictError):
-    response_code = 115002
-    status_message = "TEXONOMY_ALIAS_EXISTS"
-
-
-class TermBadParents(BadRequest):
-    response_code = 115003
-    status_message = "TERM_BAD_PARENTS"
-
-
-class TermNotFound(NotFound):
-    response_code = 115004
-    status_message = "TERM_NOT_FOUND"
-
-
-class TermExists(ConflictError):
-    response_code = 115005
-    status_message = "TERM_ALIAS_EXISTS"
-
-
-# menu
-class MenuNotFound(NotFound):
-    response_code = 116001
-    status_message = "MENU_NOT_FOUND"
-
-
-class MenuExists(ConflictError):
-    response_code = 116002
-    status_message = "MENU_ALIAS_EXISTS"

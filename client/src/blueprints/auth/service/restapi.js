@@ -1,23 +1,31 @@
 angular.module('newsletter')
 
 .factory('restUser', [
-  '$resource',
+  'supResource',
   'Config',
 
   function (
-    $resource,
+    supResource,
     Config
   ){
-    var api = Config.baseURL.auth_api;
-    
+    'use strict';
+
+    var api = Config.baseURL.api+'/user';
+
     var res = {
-      ext_token: $resource(api+"/ext_token/:open_id"),
-      sup_auth: $resource(api+"/sup_auth"),
-      check: $resource(api+"/check", null, {
-        "check": {method: "POST"}
+      auth: supResource(api+'/:open_id', {
+        open_id: '@open_id'
+      }, {
+        'access': {method: 'POST'},
+        'logout': {method: 'DELETE'}
+      }),
+      checker: supResource(api+'/:open_id/check', {
+        open_id: '@open_id'
+      }, {
+        'check': {method: 'POST'},
       })
     };
-  
+
     return res;
   }
-]);
+])

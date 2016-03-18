@@ -3,44 +3,29 @@ from __future__ import absolute_import
 
 from flask import current_app, g
 
-import uuid
-from utils.helpers import now
+from utils.helpers import now, pre_process_scope
 from utils.api_utils import output_json
 from utils.request import get_param
 
 from apiresps.validations import Struct
 
 from .errors import (RequestAccessTokenFailed,
-                     RemoteAPIFailed,
-                     UserStateInvalid,
-                     UserNotFound)
+                     LogoutAccessTokenFailed,
+                     UserTokenFailed,
+                     UserProfileFailed,
+                     UserStateInvalid)
 
 
 @output_json
-def get_new_ext_token(open_id):
-    Struct.ObjectId(open_id)
+def get_oauth_access_code(open_id):
+    Struct.Id(open_id)
 
-    User = current_app.mongodb_conn.User
-
-    user = User.find_one_by_open_id(open_id)
-
-    if not user:
-        user = User()
-        user['open_id'] = open_id
-        user['status'] = User.STATUS_INACTIVATED
-        # user['alias'] = open_id # TODO alias
+    state = current_app.sup_oauth.make_random_string(open_id)
 
     ext_key = current_app.config.get('EXT_KEY')
-    state = unicode(uuid.uuid4())
-
-    user['random_string'] = state
-    user['expires_in'] = 0
-    user.save()
-
     oauth_uri = current_app.config.get('OAUTH_PAGE_URI')
     redirect_uri = current_app.config.get('OAUTH_REDIRECT_URI')
 
-    # print user
     return {
         'state': state,
         'auth_uri': oauth_uri,
@@ -51,87 +36,110 @@ def get_new_ext_token(open_id):
 
 
 @output_json
-def get_sup_token():
-    open_id = get_param('open_id', Struct.ID, True)
-    state = get_param('state', Struct.Attr, True)
-    code = get_param('code', Struct.Attr, True)
+def get_oauth_access_token(open_id):
+    Struct.Id(open_id)
 
-    user = current_app.mongodb_conn.User.find_one_by_open_id(open_id)
-    if not user:
-        raise UserNotFound
+    state = get_param('state', Struct.Sid, True)
+    code = get_param('code', Struct.Sid, True)
 
-    if user.get('random_string') != state:
+    if not current_app.sup_oauth.match_random_string(state, open_id):
         raise UserStateInvalid
 
-    if not user['access_token']:
-        try:
-            resp = current_app.sup_auth.get_access_token(code)
-        except Exception:
-            raise RequestAccessTokenFailed
-    else:
-        if user['expires_in'] < now():
-            try:
-                resp = current_app.sup_auth.\
-                            refresh_access_token(user['refresh_token'])
-                if 'access_token' not in resp:
-                    resp = current_app.sup_auth.get_access_token(code)
-            except Exception:
-                raise RequestAccessTokenFailed
+    ExtUser = current_app.mongodb_conn.ExtUser
 
-    if 'access_token' not in resp:
-        raise RemoteAPIFailed
+    user = ExtUser.find_one_by_open_id(open_id)
+
+    if not user:
+        user = ExtUser()
+        user['open_id'] = open_id
+
+    try:
+        resp = current_app.sup_oauth.get_access_token(code)
+        assert 'access_token' in resp
+    except Exception as e:
+        raise RequestAccessTokenFailed(str(e))
+
+    try:
+        profile = current_app.sup_oauth.get_profile(resp['access_token'])
+    except Exception as e:
+        raise UserProfileFailed(str(e))
+
+    try:
+        ext_token = current_app.sup_oauth.generate_ext_token(open_id)
+    except Exception as e:
+        raise UserTokenFailed(str(e))
 
     user['access_token'] = resp['access_token']
     user['refresh_token'] = resp['refresh_token']
-    user['expires_in'] = resp['expires_in']
-    user['display_name'] = u''  # TODO display name
-    user['ext_token'] = current_app.sup_auth.generate_ext_token(open_id)
+    user['expires_at'] = resp['expires_in']+now()
+    user['token_type'] = resp['token_type']
+    user['status'] = ExtUser.STATUS_ACTIVATED
+    user['token'] = ext_token
+
+    user['display_name'] = profile['display_name']
+    user['title'] = profile['title']
+    user['locale'] = profile['locale']
+    user['description'] = profile['description']
+    user['type'] = profile['type']
+    user['snapshot'] = profile['snapshot']
+    user['scope'] = pre_process_scope(profile['owner_alias'],
+                                      profile['app_alias'])
     user.save()
 
+    return output_user(user)
+
+
+@output_json
+def check_user(open_id):
+    Struct.Id(open_id)
+
+    user = g.curr_user
+
+    result = True
+
+    if not user or \
+       user['open_id'] != open_id or \
+       not user["refresh_token"] or \
+       not user["token"] or \
+       not user["scope"]:
+        result = False
+
     return {
-        "id": user['_id'],
-        "display_name": user['display_name'],
-        "alias": user['alias'],
-        "status": user['status'],
-        "ext_token": user['ext_token']
+        'result': result
     }
 
 
 @output_json
-def get_alias():
-    user = g.curr_user
-    return {
-        "open_id": user['open_id'],
-        "alias": user['alias']
-    }
-
-
-@output_json
-def set_alias():
-    alias = get_param("alias", Struct.Alias, True)
+def logout_user(open_id):
+    Struct.Id(open_id)
 
     user = g.curr_user
 
-    user = current_app.mongodb_conn.User.find_one_by_alias(alias)
+    if user:
+        try:
+            current_app.sup_oauth.logout(user['access_token'])
+        except Exception:
+            raise LogoutAccessTokenFailed
+
+        user['access_token'] = None
+        user['refresh_token'] = None
+        user['token'] = None
+        user.save()
+
+    return output_user(user)
+
+# outputs
+
+
+def output_user(user):
     if not user:
-        raise UserNotFound
-
-    user["alias"] = alias
-    user.save()
-
+        user = {}
     return {
-        "open_id": user['open_id'],
-        "alias": user['alias']
-    }
-
-
-@output_json
-def token_check():
-    ext_token = get_param('ext_token', Struct.Token, True)
-
-    open_id = current_app.sup_auth.parse_ext_token(ext_token)
-    user = current_app.mongodb_conn.User.find_one_by_open_id(open_id)
-
-    return {
-        'result': bool(user)
+        'id': user.get('_id'),
+        'app': user.get('app'),
+        'owner': user.get('owner'),
+        'token': user.get('token'),
+        'status': user.get('status'),
+        'access_token': bool(user.get('access_token')),
+        'refresh_token': bool(user.get('refresh_token')),
     }
