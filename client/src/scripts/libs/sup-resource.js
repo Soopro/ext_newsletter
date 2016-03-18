@@ -67,7 +67,7 @@
       return function(list) {
         var count, deferred, failure, index, limit, obj, pms, results, start_then, success;
         deferred = $q.defer();
-        if (list instanceof Array) {
+        if (angular.isArray(list)) {
           results = [];
           count = 1;
           limit = list.length;

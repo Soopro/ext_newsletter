@@ -4,60 +4,64 @@
       <div class="section-block col-md-12 textarea">
         <section>
           <header>
-            <h2 class="title"><span class="text">Newsletter</span></h2>
+            <h2 class="title">
+              <span class="text">
+                {{ _('Newsletter') }}
+              </span>
+            </h2>
           </header>
           <div class="col-xs-12 text-right">
             <a ng-click="jump_to('/newsletter/edit_post/new')" 
-             class="btn btn-primary btn-wider">新建文章</a>
+             class="btn btn-primary btn-wider">{{ _('New Post') }}</a>
             <a ng-click="jump_to('/newsletter/profile')"
-             class="btn btn-primary btn-wider">信息设置</a>
+             class="btn btn-primary btn-wider">{{ _('Settings') }}</a>
             <a ng-click="jump_to('/newsletter/posts')"
-             class="btn btn-primary btn-wider">文章管理</a>
+             class="btn btn-primary btn-wider">{{ _('Posts') }}</a>
           </div>
         </section>
       </div>
     </div>
     <div class="row">
       <div class="col-md-8 col-md-offset-2">
-        <h3>新建文章</h3>
+        <h3>{{ _('New Post') }}</h3>
         <div class="form-group">
-          <label>标题:</label>
+          <label>{{ _('Title') }}:</label>
           <input ng-model="post.title" class="form-control"/>
         </div>
         <div class="form-group">
-          <label>内容:</label>
+          <label>{{ _('Content') }}:</label>
           <textarea rows="10" ng-model="post.content" 
            class="form-control"></textarea>
         </div>
         <div class="form-group">
           <button ng-click="save_post()" class="btn btn-primary btn-wider">
-            保存
+            {{ _('Save') }}
           </button>
         </div>
         <button ng-click="delete_post()" class="btn btn-default btn-wider" 
-         ng-if="!is_new">删除</button>
+         ng-if="!is_new">{{ _('Delete') }}</button>
         <div ng-if="!is_new">
           <div class="form-group">
-            <label>密码:</label>
+            <label>{{ _('Passwrod') }}:</label>
             <input ng-model="password" placeholder="Input Password" 
              class="form-control" type="password"/>
           </div>
           <div class="form-group">
-            <label>测试发送:</label>
+            <label>{{ _('Send a test to') }}:</label>
             <input ng-model="test_email" class="form-control"
              placeholder="Input test Email Address"/>
             <button ng-disabled="!test_email || !password" 
              ng-click="send_test_post(test_email, password)" 
-             class="btn btn-default btn-wider">测试发送</button>
+             class="btn btn-default btn-wider">{{ _('Send Test') }}</button>
           </div>
           <div class="form-group">
-            <h3>发送给</h3>
+            <h3>{{ _('Send to') }}</h3>
             <select ng-model="selected_role"
              ng-options="role.title for role in role_list" 
              class="form-control"></select>
             <button ng-disabled="!password" 
             class="btn btn-default btn-wider" ng-click="send_post()">
-              发送
+              {{ _('Send') }}
             </button>
           </div>
         </div>

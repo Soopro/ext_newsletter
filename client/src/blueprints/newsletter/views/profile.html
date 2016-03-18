@@ -5,15 +5,19 @@
       <div class="section-block col-md-12 textarea">
         <section>
           <header>
-            <h2 class="title"><span class="text">Newsletter</span></h2>
+            <h2 class="title">
+              <span class="text">
+                {{ _('Newsletter') }}
+              </span>
+            </h2>
           </header>
           <div class="col-xs-12 text-right">
             <a ng-click="jump_to('/newsletter/edit_post/new')" 
-             class="btn btn-primary btn-wider">新建文章</a>
+             class="btn btn-primary btn-wider">{{ _('New Post') }}</a>
             <a ng-click="jump_to('/newsletter/profile')"
-             class="btn btn-primary btn-wider">信息设置</a>
+             class="btn btn-primary btn-wider">{{ _('Settings') }}</a>
             <a ng-click="jump_to('/newsletter/posts')"
-             class="btn btn-primary btn-wider">文章管理</a>
+             class="btn btn-primary btn-wider">{{ _('Posts') }}</a>
           </div>
         </section>
       </div>
@@ -23,40 +27,40 @@
       <div class="section-block col-md-8 col-md-offset-2 textarea">
         <section>
           <header>
-            <h3 class="title">SMTP设置</h3>
+            <h3 class="title">{{ _('SMTP') }}</h3>
           </header>
           <form name="form" novalidate="novalidate">
             <fieldset class="form-group">
-              <label>host</label>
+              <label>{{ _('Host') }}</label>
               <input type="text" name="host" ng-model="profile.host" 
                placeholder="host" required="" class="form-control"/>
               <div ng-show="form.$submitted || form.host.$touched">
                 <div ng-show="form.host.$error.required" class="error">
                   <i class="ico-x errorico"></i>
-                  <span class="text">Required!</span>
+                  <span class="text">{{ _('Required!') }}</span>
                 </div>
               </div>
             </fieldset>
             <fieldset class="form-group">
-              <label>port</label>
+              <label>{{ _('Port') }}</label>
               <input type="number" name="port" ng-model="profile.port" 
                placeholder="port" required="" class="form-control"/>
               <div ng-show="form.$submitted || form.port.$touched">
                 <div ng-show="form.port.$error.required" class="error">
                   <i class="ico-x errorico"></i>
-                  <span class="text">Required!</span>
+                  <span class="text">{{ _('Required!') }}</span>
                 </div>
               </div>
             </fieldset>
             <fieldset class="form-group">
-              <label>username</label>
+              <label>{{ _('Email') }}</label>
               <input type="text" name="username"
                ng-model="profile.username" placeholder="username" 
                required="required" class="form-control"/>
               <div ng-show="form.$submitted || form.username.$touched">
                 <div ng-show="form.username.$error.required" class="error">
                   <i class="ico-x errorico"></i>
-                  <span class="text">Required!</span>
+                  <span class="text">{{ _('Required!') }}</span>
                 </div>
               </div>
             </fieldset>
@@ -64,13 +68,13 @@
               <label>
                 <input type="checkbox" name="use_tls" 
                  ng-model="profile.use_tls" 
-                 ng-checked="profile.use_tls"/>使用TLS
+                 ng-checked="profile.use_tls"/>{{ _('Use TLS') }}
               </label>
             </div>
           </form>
           <footer>
             <button ng-click="save_profile()"
-             class="btn btn-primary btn-wider">确认</button>
+             class="btn btn-primary btn-wider">{{ _('Save') }}</button>
           </footer>
         </section>
       </div>

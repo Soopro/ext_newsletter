@@ -3,6 +3,7 @@ angular.module("newsletter", [
   "ngRoute",
   "ngCookies", 
   "ngResource", 
-  "supResource"
+  "supResource",
+  'supLocales'
 ]);
 

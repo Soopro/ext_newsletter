@@ -4,15 +4,19 @@
       <div class="section-block col-md-12 textarea">
         <section>
           <header>
-            <h2 class="title"><span class="text">Newsletter</span></h2>
+            <h2 class="title">
+              <span class="text">
+                {{ _('Newsletter') }}
+              </span>
+            </h2>
           </header>
           <div class="col-xs-12 text-right">
             <a ng-click="jump_to('/newsletter/edit_post/new')" 
-             class="btn btn-primary btn-wider">新建文章</a>
+             class="btn btn-primary btn-wider">{{ _('New Post') }}</a>
             <a ng-click="jump_to('/newsletter/profile')"
-             class="btn btn-primary btn-wider">信息设置</a>
+             class="btn btn-primary btn-wider">{{ _('Settings') }}</a>
             <a ng-click="jump_to('/newsletter/posts')"
-             class="btn btn-primary btn-wider">文章管理</a>
+             class="btn btn-primary btn-wider">{{ _('Posts') }}</a>
           </div>
         </section>
       </div>
@@ -22,7 +26,7 @@
       <div class="section-block col-md-12">
         <section>
           <header>
-            <h3 class="title"> 文章管理</h3>
+            <h3 class="title">{{ _('Posts') }}</h3>
           </header>
         </section>
       </div>
@@ -33,11 +37,13 @@
     <section>
       <div class="divtable">
         <div class="row divtable-header">
-          <h5 class="divtable-cell col-xs-6 col-sm-5 col-md-5">标题</h5>
+          <h5 class="divtable-cell col-xs-6 col-sm-5 col-md-5">
+            {{ _('Title') }}
+          </h5>
           <h5 class="divtable-cell col-xs-0 col-sm-3 col-md-3 
-           text-center">日期</h5>
+           text-center">{{ _('Date') }}</h5>
           <h5 class="divtable-cell col-xs-3 col-sm-2 col-md-2 
-           text-center">详情</h5>
+           text-center">{{ _('Details') }}</h5>
         </div>
         <div ng-repeat="post in posts" class="row divtable-row">
           <div class="divtable-cell col-xs-6 col-sm-5 col-md-5">
