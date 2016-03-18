@@ -83,6 +83,7 @@ def create_post():
 
 @output_json
 def get_post(post_id):
+    Struct.ObjectId(post_id)
     post = current_app.mongodb_conn.Post.\
         find_one_by_id_and_open_id(post_id, g.curr_user["open_id"])
     if not post:
@@ -93,6 +94,7 @@ def get_post(post_id):
 
 @output_json
 def update_post(post_id):
+    Struct.ObjectId(post_id)
     title = get_param('title', Struct.Attr, required=True)
     content = get_param('content', Struct.Text, required=True)
 
@@ -111,6 +113,7 @@ def update_post(post_id):
 
 @output_json
 def delete_post(post_id):
+    Struct.ObjectId(post_id)
     post = current_app.mongodb_conn.Post.\
         find_one_by_id_and_open_id(post_id, g.curr_user["open_id"])
     if not post:
@@ -123,6 +126,7 @@ def delete_post(post_id):
 
 @output_json
 def send_post(post_id):
+    Struct.ObjectId(post_id)
     role_id = get_param('selected_role', Struct.ObjectId, required=True)
     password = get_param('password', Struct.Pwd, required=True)
 
@@ -152,6 +156,7 @@ def send_post(post_id):
 
 @output_json
 def send_test_post(post_id):
+    Struct.ObjectId(post_id)
     test_email = get_param('test_mail', Struct.Email, required=True)
     password = get_param('password', Struct.Pwd, required=True)
 
