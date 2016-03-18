@@ -7,6 +7,7 @@ from utils.api_utils import output_json
 from utils.request import get_param
 from datetime import datetime
 from services.mail import MailSender
+from apiresps.validations import Struct
 
 
 @output_json
@@ -19,10 +20,10 @@ def get_profile():
 
 @output_json
 def create_profile():
-    host = get_param("host", required=True)
-    port = get_param("port", required=True)
-    username = get_param("username", required=True)
-    use_tls = get_param("use_tls", default=False)
+    host = get_param("host", Struct.Domain, required=True)
+    port = get_param("port", Struct.Int, required=True)
+    username = get_param("username", Struct.Email, required=True)
+    use_tls = get_param("use_tls", Struct.Bool, default=False)
 
     Profile = current_app.mongodb_conn.Profile
     profile = Profile.find_one_by_open_id(g.curr_user["open_id"])
@@ -40,10 +41,10 @@ def create_profile():
 
 @output_json
 def update_profile():
-    host = get_param("host", required=True)
-    port = get_param("port", required=True)
-    username = get_param("username", required=True)
-    use_tls = get_param("use_tls", default=False)
+    host = get_param("host", Struct.Domain, required=True)
+    port = get_param("port", Struct.Int, required=True)
+    username = get_param("username", Struct.Email, required=True)
+    use_tls = get_param("use_tls", Struct.Bool, default=False)
 
     profile = current_app.mongodb_conn.Profile.\
         find_one_by_open_id(g.curr_user["open_id"])
@@ -69,8 +70,8 @@ def create_post():
     user = g.curr_user
     open_id = user.get('open_id')
 
-    title = get_param('title', required=True)
-    content = get_param('content', required=True)
+    title = get_param('title', Struct.Attr, required=True)
+    content = get_param('content', Struct.Text, required=True)
 
     post = current_app.mongodb_conn.Post()
     post["open_id"] = open_id
@@ -92,8 +93,8 @@ def get_post(post_id):
 
 @output_json
 def update_post(post_id):
-    title = get_param('title', required=True)
-    content = get_param('content', required=True)
+    title = get_param('title', Struct.Attr, required=True)
+    content = get_param('content', Struct.Text, required=True)
 
     post = current_app.mongodb_conn.Post.\
         find_one_by_id_and_open_id(post_id, g.curr_user["open_id"])
@@ -122,8 +123,8 @@ def delete_post(post_id):
 
 @output_json
 def send_post(post_id):
-    role_id = get_param('selected_role', required=True)
-    password = get_param('password', required=True)
+    role_id = get_param('selected_role', Struct.ObjectId, required=True)
+    password = get_param('password', Struct.Pwd, required=True)
 
     profile = current_app.mongodb_conn.Profile.\
         find_one_by_open_id(g.curr_user["open_id"])
@@ -151,8 +152,8 @@ def send_post(post_id):
 
 @output_json
 def send_test_post(post_id):
-    test_email = get_param('test_mail', required=True)
-    password = get_param('password', required=True)
+    test_email = get_param('test_mail', Struct.Email, required=True)
+    password = get_param('password', Struct.Pwd, required=True)
 
     profile = current_app.mongodb_conn.Profile.\
         find_one_by_open_id(g.curr_user["open_id"])
