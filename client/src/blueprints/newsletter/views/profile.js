@@ -4,16 +4,19 @@ angular.module("newsletter")
   "$scope", 
   "restNL", 
   "$location",
+  "fsv",
+  
   function(
     $scope, 
     restNL,
-    $location
+    $location,
+    fsv
   ) {
     $scope.profile = restNL.profile.get();
     $scope.save_profile = function() {
-      console.log('save profile');
-      console.log($scope.profile);
-      $scope.profile.$save();
+      if (fsv($scope.profile_form, ['host', 'port', 'email', 'use_tls'])){
+        $scope.profile.$save();
+      }
     };
     
     $scope.jump_to = function(route){

@@ -2,10 +2,15 @@ angular.module('newsletter')
 
 .constant('Config', {
   'baseURL': {
-    'api': sup_ext_newsletter.server.api,
-    'auth_api': sup_ext_newsletter.server.auth_api,
+    'api': sup_ext_newsletter.server.api
   },
-  'cookie_domain': sup_ext_newsletter.cookie_domain,
+  
   'debug': sup_ext_newsletter.is_debug,
+  
+  'route': {
+    portal: '/newsletter',
+    auth: '/auth',
+    error: '/404',
+  },
 
 });

@@ -1,65 +1,47 @@
-<div class="wrapper">
-  <section class="container-fluid">
-    <div class="row">
-      <div class="section-block col-md-12 textarea">
-        <section>
-          <header>
-            <h2 class="title">
-              <span class="text">
-                {{ _('Newsletter') }}
-              </span>
-            </h2>
-          </header>
-          <div class="col-xs-12 text-right">
-            <a ng-click="jump_to('/newsletter/edit_post/new')" 
-             class="btn btn-primary btn-wider">{{ _('New Post') }}</a>
-            <a ng-click="jump_to('/newsletter/profile')"
-             class="btn btn-primary btn-wider">{{ _('Settings') }}</a>
-            <a ng-click="jump_to('/newsletter/posts')"
-             class="btn btn-primary btn-wider">{{ _('Posts') }}</a>
-          </div>
-        </section>
-      </div>
+<div layout="column">
+  <md-toolbar class="md-hue-3">
+    <div class="md-toolbar-tools">
+      <md-button class="md-icon-button" aria-label="{{_('Back')}}"
+       ng-click="jump_to('/newsletter/posts')" ng-disabled="true">
+        <md-icon md-svg-icon="ic_arrow_back_24px"></md-icon>
+      </md-button>
+      <h2>
+        <span>{{ _('Newsletter') }}</span>
+      </h2>
+      <span flex></span>
+      <ng-include src="'blueprints/newsletter/views/menu.tmpl.html'" 
+       ng-controller="menuCtrl"></ng-include>
     </div>
-    <div class="row">
-      <div></div>
-      <div class="section-block col-md-12">
-        <section>
-          <header>
-            <h3 class="title">{{ _('Posts') }}</h3>
-          </header>
-        </section>
+  </md-toolbar>
+  <div class="md-padding">
+    <md-list>
+      <md-subheader class="md-no-sticky">{{_('Posts')}}</md-subheader>
+      <div ng-repeat="item in forwards">
+        <md-list-item class="md-2-line">
+          <div class="md-list-item-text" layout="column">
+            <h3>{{ item.title }}</h3>
+            <p class="text-nowrap" max-vw="70">{{ item.update_time }}</p>
+          </div>
+          <div class="actions" layout="row" layout-align="end center">
+              <md-button class="md-raised md-icon-button"
+               ng-href="open_post(post.id)" aria-label="{{_('Edit')}}">
+                <md-icon md-svg-icon="ic_create_24px"></md-icon>
+              </md-button>
+          </div>
+        </md-list-item>
+        <md-divider class="dotted" ng-show="!$last"></md-divider>
       </div>
-    </div>
-    <!-- Section block-->
-    <div></div>
-    <div class="section-block col-md-12"></div>
-    <section>
-      <div class="divtable">
-        <div class="row divtable-header">
-          <h5 class="divtable-cell col-xs-6 col-sm-5 col-md-5">
-            {{ _('Title') }}
-          </h5>
-          <h5 class="divtable-cell col-xs-0 col-sm-3 col-md-3 
-           text-center">{{ _('Date') }}</h5>
-          <h5 class="divtable-cell col-xs-3 col-sm-2 col-md-2 
-           text-center">{{ _('Details') }}</h5>
-        </div>
-        <div ng-repeat="post in posts" class="row divtable-row">
-          <div class="divtable-cell col-xs-6 col-sm-5 col-md-5">
-            <p ng-bind="post.title" class="text"></p>
-          </div>
-          <div class="divtable-cell col-xs-0 col-sm-3 col-md-3 text-center">
-            <p ng-bind="post.update_time" class="text"></p>
-          </div>
-          <div class="divtable-cell col-xs-3 col-sm-2 col-md-2 text-center">
-            <a ng-click="open_post(post.id)"
-             class="btn btn-primary btn-circle">
-              <i class="ico-eye"></i>
-            </a>
+      <md-divider></md-divider>
+      <md-list-item class="md-2-line">
+        <div class="md-list-item-text" layout="column">
+          <div>
+            <md-button class="md-raised" 
+             ng-click="jump_to('/newsletter/edit_post/new')">
+              {{_('New')}}
+            </md-button>
           </div>
         </div>
-      </div>
-    </section>
-  </section>
+      </md-list-item>
+    </md-list>
+  </div>
 </div>

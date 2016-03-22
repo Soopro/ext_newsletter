@@ -17,8 +17,7 @@ angular.module('newsletter')
     'use strict';
 
     if ($routeParams.code && $routeParams.state) {
-      console.log($routeParams.code)
-      console.log($routeParams.state)
+
       var params = {
         code: $routeParams.code,
         open_id: Auth.get_open_id(),
@@ -28,9 +27,8 @@ angular.module('newsletter')
       
       auth.$access()
       .then(function (data) {
-        console.log(data);
-        Auth.set_token(data.ext_token);
-        $location.path(Config.route.index);
+        Auth.set_token(data.token)
+        $location.path(Config.route.portal)
       })
     } else {
       console.error("code and state is required!")

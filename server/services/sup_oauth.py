@@ -1,8 +1,8 @@
 # coding=utf-8
 from __future__ import absolute_import
 
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from bson import ObjectId
+from itsdangerous import (TimedJSONWebSignatureSerializer as TimedSerializer,
+                          JSONWebSignatureSerializer as Serializer)
 import requests
 import json
 
@@ -20,14 +20,17 @@ class SupOAuth(object):
                  api_uri, token_uri, redirect_uri):
 
         expires_in = int(expires_in.total_seconds()) or \
-                     self.DEFAULT_EXT_EXPIRES_IN
-        self._s = Serializer(
+            self.DEFAULT_EXT_EXPIRES_IN
+        self._s = TimedSerializer(
             secret_key=secret_key,
             expires_in=expires_in
         )
-        self._r = Serializer(
+        self._r = TimedSerializer(
             secret_key=secret_key,
             expires_in=self.RANDOM_STRING_EXPIRES_IN
+        )
+        self._f = Serializer(
+            secret_key=secret_key
         )
         self.ext_key = ext_key
         self.ext_secret = ext_secret
@@ -43,11 +46,25 @@ class SupOAuth(object):
             raise self.OAuthInvalidExtToken(str(e))
         return token
 
+    def encrypt(self, code):
+        try:
+            code = unicode(code)
+            code = self._f.dumps(code).decode('utf-8')
+        except Exception as e:
+            raise self.OAuthEncryptionFailed(str(e))
+        return code
+
+    def decrypt(self, code):
+        try:
+            code = self._f.loads(code)
+        except Exception as e:
+            raise self.OAuthDecryptionFailed(str(e))
+        return code
+
     def load_ext_token(self, headers):
         auth = headers.get(self.AUTH_HEADER_KEY)
         if not auth:
             return None
-
         parts = auth.split()
 
         if parts[0].lower() != self.AUTH_HEADER_PREFIX.lower():
@@ -55,8 +72,7 @@ class SupOAuth(object):
 
         try:
             token = parts[1]
-            payload = self._s.loads(token)
-            open_id = ObjectId(payload)
+            open_id = self._s.loads(token)
         except Exception:
             return None
 
@@ -86,15 +102,18 @@ class SupOAuth(object):
             'redirect_uri': self.redirect_uri
         }
         headers = self.DEFAULT_HEADERS
-
         try:
+            self.token_uri
             r = requests.post(self.token_uri,
                               data=json.dumps(payloads),
                               headers=headers)
             result = r.json()
             assert isinstance(result, dict)
-        except:
+        except Exception:
             raise self.OAuthInvalidAccessToken
+
+        result['access_token'] = self.encrypt(result['access_token'])
+        result['refresh_token'] = self.encrypt(result['refresh_token'])
 
         return result
 
@@ -102,9 +121,10 @@ class SupOAuth(object):
         payloads = {
             'ext_key': self.ext_key,
             'ext_secret': self.ext_secret,
-            'refresh_token': refresh_token,
+            'refresh_token': self.decrypt(refresh_token),
             'grant_type': "refresh_token",
         }
+
         headers = self.DEFAULT_HEADERS
         try:
             r = requests.post(self.token_uri,
@@ -115,13 +135,16 @@ class SupOAuth(object):
         except:
             raise self.OAuthInvalidRefreshToken
 
+        result['access_token'] = self.encrypt(result['access_token'])
+        result['refresh_token'] = self.encrypt(result['refresh_token'])
+
         return result
 
     def request(self, method, url, access_token, **kwargs):
         headers = self.DEFAULT_HEADERS
         headers.update({
             self.AUTH_HEADER_KEY: '{} {}'.format(self.AUTH_HEADER_PREFIX,
-                                                 access_token)
+                                                 self.decrypt(access_token))
         })
 
         if 'headers' not in kwargs:
@@ -135,11 +158,12 @@ class SupOAuth(object):
             assert isinstance(result, dict)
             assert r.status_code < 400
         except Exception as e:
-            if r.status_code < 400:
+            if r.status_code == 401:
+                raise self.OAuthInvalidAccessToken
+            elif r.status_code >= 400:
                 err_msg = json.dumps(r.json())
             else:
                 err_msg = str(e)
-            print e
             raise self.OAuthInvalidRequest(err_msg)
 
         return result
@@ -190,3 +214,9 @@ class SupOAuth(object):
 
     class OAuthInvalidParams(OAuthException):
         status_message = 'OAUTH_INVALID_PARAMS'
+
+    class OAuthDecryptionFailed(OAuthException):
+        status_message = 'OAUTH_DECRYPTION_FAILED'
+
+    class OAuthEncryptionFailed(OAuthException):
+        status_message = 'OAUTH_ENCRYPTION_FAILED'

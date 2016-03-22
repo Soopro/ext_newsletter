@@ -1,83 +1,76 @@
-
-<div class="wrapper">
-  <section class="container-fluid">
-    <div class="row">
-      <div class="section-block col-md-12 textarea">
-        <section>
-          <header>
-            <h2 class="title">
-              <span class="text">
-                {{ _('Newsletter') }}
-              </span>
-            </h2>
-          </header>
-          <div class="col-xs-12 text-right">
-            <a ng-click="jump_to('/newsletter/edit_post/new')" 
-             class="btn btn-primary btn-wider">{{ _('New Post') }}</a>
-            <a ng-click="jump_to('/newsletter/profile')"
-             class="btn btn-primary btn-wider">{{ _('Settings') }}</a>
-            <a ng-click="jump_to('/newsletter/posts')"
-             class="btn btn-primary btn-wider">{{ _('Posts') }}</a>
-          </div>
-        </section>
-      </div>
+<div layout="column">
+  <md-toolbar class="md-hue-3">
+    <div class="md-toolbar-tools">
+      <md-button class="md-icon-button" aria-label="{{_('Back')}}"
+       ng-click="jump_to('/newsletter/posts')">
+        <md-icon md-svg-icon="ic_arrow_back_24px"></md-icon>
+      </md-button>
+      <h2>
+        <span>{{ _('Setting') }}</span>
+      </h2>
+      <span flex></span>
+      <ng-include src="'blueprints/newsletter/views/menu.tmpl.html'" 
+       ng-controller="menuCtrl"></ng-include>
     </div>
-    <div class="row">
-      <div></div>
-      <div class="section-block col-md-8 col-md-offset-2 textarea">
-        <section>
-          <header>
-            <h3 class="title">{{ _('SMTP') }}</h3>
-          </header>
-          <form name="form" novalidate="novalidate">
-            <fieldset class="form-group">
-              <label>{{ _('Host') }}</label>
-              <input type="text" name="host" ng-model="profile.host" 
-               placeholder="host" required="" class="form-control"/>
-              <div ng-show="form.$submitted || form.host.$touched">
-                <div ng-show="form.host.$error.required" class="error">
-                  <i class="ico-x errorico"></i>
-                  <span class="text">{{ _('Required!') }}</span>
-                </div>
-              </div>
-            </fieldset>
-            <fieldset class="form-group">
-              <label>{{ _('Port') }}</label>
-              <input type="number" name="port" ng-model="profile.port" 
-               placeholder="port" required="" class="form-control"/>
-              <div ng-show="form.$submitted || form.port.$touched">
-                <div ng-show="form.port.$error.required" class="error">
-                  <i class="ico-x errorico"></i>
-                  <span class="text">{{ _('Required!') }}</span>
-                </div>
-              </div>
-            </fieldset>
-            <fieldset class="form-group">
-              <label>{{ _('Email') }}</label>
-              <input type="text" name="username"
-               ng-model="profile.username" placeholder="username" 
-               required="required" class="form-control"/>
-              <div ng-show="form.$submitted || form.username.$touched">
-                <div ng-show="form.username.$error.required" class="error">
-                  <i class="ico-x errorico"></i>
-                  <span class="text">{{ _('Required!') }}</span>
-                </div>
-              </div>
-            </fieldset>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="use_tls" 
-                 ng-model="profile.use_tls" 
-                 ng-checked="profile.use_tls"/>{{ _('Use TLS') }}
-              </label>
-            </div>
-          </form>
-          <footer>
-            <button ng-click="save_profile()"
-             class="btn btn-primary btn-wider">{{ _('Save') }}</button>
-          </footer>
-        </section>
+  </md-toolbar>
+  <div class="md-padding">
+    <form name="profile_form" layout="column" 
+     novalidate ng-submit="save_profile()">
+      
+      <md-input-container>
+        <label>{{_('Host')}}</label>
+        <input name="host" ng-model="profile.host"
+         ng-pattern="/^smtp(\.\w+){2,}$/" required></input>
+        <ng-messages for="profile_form.host.$error" role="alert">
+          <ng-message when="required">
+            {{ _('Host is required.') }}
+          </ng-message>
+          <ng-message when="pattern">
+            {{ _('This is not a SMTP server!') }}
+          </ng-message>
+        </ng-messages>
+      </md-input-container>
+      
+      <md-input-container>
+        <label>{{_('Port')}}</label>
+        <input name="port" ng-model="profile.port"
+         type="number" min="1" max="100000" required></input>
+        <ng-messages for="profile_form.port.$error" role="alert">
+          <ng-message when="required">
+            {{ _('Port is required.') }}
+          </ng-message>
+        </ng-messages>
+      </md-input-container>
+      
+      <md-input-container>
+        <label>{{_('Email')}}</label>
+        <input name="email" ng-model="profile.username"
+         type="email" required></input>
+         <ng-messages for="profile_form.email.$error" role="alert">
+           <ng-message when="email">
+             {{ _('Email, please!') }}
+           </ng-message>
+           <ng-message when="required">
+             {{ _('Email is required.') }}
+           </ng-message>
+         </ng-messages>
+      </md-input-container>
+      
+      <md-checkbox name="use_tls" ng-model="profile.use_tls"
+       aria-label="{{ _('Use TLS') }}">
+        {{ _('Use TLS') }}
+      </md-checkbox>
+      
+      <div layout="row">
+        <md-button class="md-raised md-primary" type="submit"
+         ng-disabled="submitted">
+          {{_('Save')}}
+        </md-button>
+        <md-button class="md-raised" type="button"
+         ng-click="jump_to('/dashboard')" ng-disabled="submitted">
+          {{_('Cancel')}}
+        </md-button>
       </div>
-    </div>
-  </section>
+    </form>
+  </div>
 </div>

@@ -1,17 +1,18 @@
 # coding=utf-8
 from __future__ import absolute_import
 
-from apiresps.errors import (InternalServerError,
+from apiresps.errors import (AuthFailed,
+                             InternalServerError,
                              PermissionDenied,
                              NotFound)
 
 
-class RequestAccessTokenFailed(InternalServerError):
+class RequestAccessTokenFailed(AuthFailed):
     status_message = "REQUEST_ACCESS_TOKEN_FAILED"
     response_code = 300001
 
 
-class RefreshAccessTokenFailed(InternalServerError):
+class RefreshAccessTokenFailed(AuthFailed):
     status_message = "REFRESH_ACCESS_TOKEN_FAILED"
     response_code = 300002
 

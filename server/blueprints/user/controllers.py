@@ -19,16 +19,14 @@ from .errors import (RequestAccessTokenFailed,
 @output_json
 def get_oauth_access_code(open_id):
     Struct.Id(open_id)
-
+    
     state = current_app.sup_oauth.make_random_string(open_id)
 
     ext_key = current_app.config.get('EXT_KEY')
-    oauth_uri = current_app.config.get('OAUTH_PAGE_URI')
     redirect_uri = current_app.config.get('OAUTH_REDIRECT_URI')
 
     return {
         'state': state,
-        'auth_uri': oauth_uri,
         'ext_key': ext_key,
         'response_type': 'code',
         'redirect_uri': redirect_uri
@@ -57,10 +55,12 @@ def get_oauth_access_token(open_id):
         resp = current_app.sup_oauth.get_access_token(code)
         assert 'access_token' in resp
     except Exception as e:
-        raise RequestAccessTokenFailed(str(e))
+        raise RequestAccessTokenFailed('access')
 
     try:
         profile = current_app.sup_oauth.get_profile(resp['access_token'])
+    except current_app.sup_oauth.OAuthInvalidAccessToken as e:
+        raise RequestAccessTokenFailed('profile')
     except Exception as e:
         raise UserProfileFailed(str(e))
 
@@ -68,13 +68,13 @@ def get_oauth_access_token(open_id):
         ext_token = current_app.sup_oauth.generate_ext_token(open_id)
     except Exception as e:
         raise UserTokenFailed(str(e))
+    
 
     user['access_token'] = resp['access_token']
     user['refresh_token'] = resp['refresh_token']
     user['expires_at'] = resp['expires_in']+now()
     user['token_type'] = resp['token_type']
     user['status'] = ExtUser.STATUS_ACTIVATED
-    user['token'] = ext_token
 
     user['display_name'] = profile['display_name']
     user['title'] = profile['title']
@@ -85,8 +85,11 @@ def get_oauth_access_token(open_id):
     user['scope'] = pre_process_scope(profile['owner_alias'],
                                       profile['app_alias'])
     user.save()
+    
+    logged_user = output_user(user)
+    logged_user['token'] = ext_token
 
-    return output_user(user)
+    return logged_user
 
 
 @output_json
@@ -97,11 +100,10 @@ def check_user(open_id):
 
     result = True
 
-    if not user or \
-       user['open_id'] != open_id or \
-       not user["refresh_token"] or \
-       not user["token"] or \
-       not user["scope"]:
+    if not user \
+    or user['open_id'] != open_id \
+    or not user["refresh_token"] \
+    or not user["scope"]:
         result = False
 
     return {
@@ -123,7 +125,6 @@ def logout_user(open_id):
 
         user['access_token'] = None
         user['refresh_token'] = None
-        user['token'] = None
         user.save()
 
     return output_user(user)
@@ -138,7 +139,6 @@ def output_user(user):
         'id': user.get('_id'),
         'app': user.get('app'),
         'owner': user.get('owner'),
-        'token': user.get('token'),
         'status': user.get('status'),
         'access_token': bool(user.get('access_token')),
         'refresh_token': bool(user.get('refresh_token')),

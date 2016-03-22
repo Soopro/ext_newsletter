@@ -15,7 +15,7 @@ angular.module('newsletter')
     })
     
     .when('/dashboard', {
-      redirectTo: '/newsletter/profile'
+      redirectTo: '/newsletter'
     })
     
     .when('/404', {

@@ -4,16 +4,20 @@ angular.module('newsletter')
   '$q',
   '$location',
   'Auth',
+  'extManager',
   'Config',
 
   function(
     $q,
     $location,
     Auth,
+    extManager,
     Config
   ){
     'use strict';
-
+    
+    var retry = 0;
+    
     var interceptor = {
       request: function (request) {
         request.headers = request.headers || {};
@@ -24,6 +28,7 @@ angular.module('newsletter')
         return request;
       },
       response: function (response) {
+        retry = 0;
         return response ? response : $q.when(response)
       },
       responseError: function (rejection) {
@@ -33,20 +38,26 @@ angular.module('newsletter')
           console.log ('Request is rejected by remote.')
         } else {
           if (rejection.status == 0 && rejection.data == null){
-            $location.path('/404');
+            $location.path(Config.route.error);
             console.error('Error! No connection to server.')
           }
           if (rejection.status == 401) {
-            Auth.clean();
-            $location.path('/auth');
+            Auth.logout();
+            if(retry < 3){
+              retry += 1;
+              $location.path(Config.route.auth);
+            } else {
+              $location.path(Config.route.error);
+            }
+          } else if (rejection.status == 404){
+            $location.path(Config.route.error);
           }
           if (rejection.data && rejection.data.errmsg
                              && rejection.status != 200){
             console.error(rejection.data)
+            extManager.flash(rejection.data.errmsg, true)
           }
         }
-
-        
         return $q.reject(rejection);
       }
     };

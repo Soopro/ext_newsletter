@@ -14,6 +14,7 @@ class ExtUser(Document):
     use_dot_notation = True
 
     structure = {
+        "open_id": unicode,
         "scope": unicode,
         "display_name": unicode,
         "title": unicode,
@@ -21,12 +22,10 @@ class ExtUser(Document):
         "description": unicode,
         "type": unicode,
         "snapshot": unicode,
-        "open_id": unicode,
         "access_token": unicode,
         "refresh_token": unicode,
         "token_type": unicode,
         "expires_at": int,
-        "token": unicode,
         "status": int,
         "updated": int,
         "creation": int,
@@ -44,7 +43,6 @@ class ExtUser(Document):
         "access_token": u'',
         "refresh_token": u'',
         "token_type": u'',
-        "token": u'',
         "expires_at": 0,
         "status": STATUS_INACTIVATED,
         "updated": now,

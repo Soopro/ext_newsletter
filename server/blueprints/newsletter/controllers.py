@@ -127,7 +127,7 @@ def delete_post(post_id):
 @output_json
 def send_post(post_id):
     Struct.ObjectId(post_id)
-    role_id = get_param('selected_role', Struct.ObjectId, required=True)
+    role_ids = get_param('selected_roles', Struct.ObjectId, required=True)
     password = get_param('password', Struct.Pwd, required=True)
 
     profile = current_app.mongodb_conn.Profile.\
@@ -140,8 +140,12 @@ def send_post(post_id):
     if not post:
         raise PostNotFound
 
-    members = _get_member_by_roles(role_id)
+    members = []
+    for role_id in role_ids:
+        members.extends(_get_member_by_roles(role_id))
+
     print "members:", members
+
     to = []
     for member in members:
         to.append(member.get('email'))
