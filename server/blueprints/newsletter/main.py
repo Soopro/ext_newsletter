@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 
 from flask import Blueprint, current_app
-from .models import Profile, Post, History
+from .models import Profile, Post, History, Role, Member
 from .routes import urlpatterns
 from apiresps import APIError
 from utils.api_utils import make_json_response
@@ -16,7 +16,7 @@ blueprint = Blueprint(bp_name, __name__)
 
 route_inject(blueprint, urlpatterns)
 
-model_list = [Profile, Post, History]
+model_list = [Profile, Post, History, Role, Member]
 
 
 @blueprint.before_app_first_request

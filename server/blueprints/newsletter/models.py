@@ -86,3 +86,78 @@ class Profile(Document):
         return self.find_one({
             "open_id": open_id
         })
+
+
+class Role(Document):
+    __collection__ = "role"
+
+    structure = {
+        "open_id": unicode,
+        "alias": unicode,
+        "title": unicode
+    }
+
+    required_fields = ["open_id", "alias", "title"]
+
+    def find_all_by_open_id(self, open_id):
+        return self.find({
+            "open_id": open_id
+        })
+
+    def find_one_by_oid_and_id(self, open_id, id):
+        return self.find_one({
+            "open_id": open_id,
+            "_id": ObjectId(id)
+        })
+
+    def find_one_by_oid_and_alias(self, open_id, alias):
+        return self.find_one({
+            "open_id": open_id,
+            "alias": alias
+        })
+
+
+class Member(Document):
+    __collection__ = "member"
+
+    structure = {
+        "open_id": unicode,
+        "login": unicode,
+        "name": unicode,
+        "email": unicode,
+        "mobile": unicode,
+        "avatar": unicode,
+        "role": unicode
+    }
+
+    required_fields = [
+        "open_id",
+        "login",
+        "name",
+        "email",
+        "mobile",
+        "avatar",
+        "role"
+    ]
+
+    def find_all_by_open_id(self, open_id):
+        return self.find({
+            "open_id": open_id
+        })
+
+    def find_all_by_oid_and_role(self, open_id, role):
+        return self.find({
+            "open_id": open_id,
+            "role": role
+        })
+
+    def find_all_by_oid_and_login(self, open_id, login):
+        return self.find({
+            "open_id": open_id,
+            "login": login
+        })
+
+    def find_one_by_id(self, id):
+        return self.find_one({
+            "_id": ObjectId(id)
+        })

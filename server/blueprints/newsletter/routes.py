@@ -16,5 +16,6 @@ urlpatterns = [
     ("/posts/<post_id>/mail", send_post, "POST"),
     ("/posts/<post_id>/mail_test", send_test_post, "POST"),
 
-    ("/member_roles", get_member_role, "GET")
+    ("/member_roles", get_member_roles, "GET"),
+    ("/member_roles", update_member_roles, "POST")
 ]

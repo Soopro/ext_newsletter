@@ -13,112 +13,60 @@
        ng-controller="menuCtrl"></ng-include>
     </div>
   </md-toolbar>
-  <div layout="column">
-    <div class="md-padding">
-      <form name="post_form" layout="column"
-       novalidate ng-submit="save_post()">
+  
+  <div class="md-padding">
+    <form name="post_form" layout="column"
+     novalidate ng-submit="save_post()">
+    
+      <md-input-container>
+        <label>{{_('Title')}}</label>
+        <input name="title" ng-model="post.title"
+         md-maxlength="30" required/>
+        <ng-messages for="post_form.title.$error" role="alert">
+          <ng-message when="required">
+            {{ _('Title is required.') }}
+          </ng-message>
+        </ng-messages>
+      </md-input-container>
+    
+      <md-input-container class="md-block">
+        <label>{{_('Content')}}</label>
+        <textarea name="content" ng-model="post.content"
+         md-maxlength="6000" rows="10" required></textarea>
+        <ng-messages for="post_form.content.$error" role="alert">
+          <ng-message when="required">
+            {{ _('Content is required.') }}
+          </ng-message>
+        </ng-messages>
+      </md-input-container>
+    
+      <div layout="row">
+        <md-button class="md-raised md-primary" type="submit"
+         ng-disabled="is_submitted">
+          {{_('Save')}}
+        </md-button>
+        <md-button class="md-raised" type="button" ng-if="is_new"
+         ng-click="jump_to('/newsletter/posts')" ng-disabled="is_submitted">
+          {{_('Cancel')}}
+        </md-button>
+        <md-button class="md-raised" type="button" ng-if="!is_new"
+         ng-click="jump_to('/newsletter/posts/' + post.id + '/send')" 
+         ng-disabled="is_submitted">
+          {{_('Send')}}
+        </md-button>
       
-        <md-input-container>
-          <label>{{_('Title')}}</label>
-          <input name="title" ng-model="post.title"
-           md-maxlength="30" required/>
-          <ng-messages for="post_form.title.$error" role="alert">
-            <ng-message when="required">
-              {{ _('Title is required.') }}
-            </ng-message>
-          </ng-messages>
-        </md-input-container>
+        <span flex></span>
       
-        <md-input-container class="md-block">
-          <label>{{_('Content')}}</label>
-          <textarea name="content" ng-model="post.content"
-           md-maxlength="6000" rows="10" required></textarea>
-          <ng-messages for="post_form.content.$error" role="alert">
-            <ng-message when="required">
-              {{ _('Content is required.') }}
-            </ng-message>
-          </ng-messages>
-        </md-input-container>
-      
-        <div layout="row">
-          <md-button class="md-raised md-primary" type="submit"
-           ng-disabled="is_submitted">
-            {{_('Save')}}
-          </md-button>
-          <md-button class="md-raised" type="button"
-           ng-click="jump_to('/dashboard')" ng-disabled="is_submitted">
-            {{_('Cancel')}}
-          </md-button>
-        
-          <span flex></span>
-        
-          <md-button class="md-icon-button"
-           aria-label="{{_('Delete')}}"
-           ng-click="delete_post()" type="button" 
-           ng-disabled="is_new || is_submitted">
-           <md-icon md-svg-icon="ic_delete_24px"></md-icon>
-          </md-button>
-        </div>
-      
-      </form>
-    </div>
+        <md-button class="md-icon-button"
+         aria-label="{{_('Delete')}}"
+         ng-click="delete_post()" type="button" 
+         ng-disabled="is_new || is_submitted">
+         <md-icon md-svg-icon="ic_delete_24px"></md-icon>
+        </md-button>
+      </div>
     
-    <md-divider></md-divider>
-    
-    <div class="md-padding">
-      <form name="test_mail_form" layout="column" 
-       novalidate ng-submit="send_test_post(test_email, test_password)">
-     
-        <md-input-container class="md-block">
-          <label>{{_('Password')}}</label>
-          <input name="password" ng-model="test_password" 
-           type="password"></input>
-        </md-input-container>
-      
-        <md-input-container class="md-block">
-          <label>{{_('Test Email')}}</label>
-          <input name="test_email" ng-model="test_email" 
-           type="email" required></input>
-          <ng-messages for="test_mail_form.test_email.$error" role="alert">
-            <ng-message when="required">
-              {{ _('Test Email is required.') }}
-            </ng-message>
-            <ng-message when="email">
-              {{ _('Email, please! Just one.') }}
-            </ng-message>
-          </ng-messages>
-        </md-input-container>
-    
-        <div layout="row">
-          <md-button class="md-raised md-primary" ng-disabled="is_sended">
-            {{_('Test Send')}}
-          </md-button>
-        </div>
-    
-      </form>
-    </div>
-    
-    <md-divider></md-divider>
-    
-    <div class="md-padding">
-      <form name="mail_form" layout="column" 
-       novalidate ng-submit="send_test_post(roles, password)">
-     
-        <md-input-container class="md-block">
-          <label>{{_('Password')}}</label>
-          <input name="password" ng-model="password" type="password"></input>
-        </md-input-container>
-      
-        
-    
-        <div layout="row">
-          <md-button class="md-raised md-primary" ng-disabled="is_sended">
-            {{_('Send')}}
-          </md-button>
-        </div>
-    
-      </form>
-    </div>
+    </form>
+  </div>
     
   </div>
 </div>

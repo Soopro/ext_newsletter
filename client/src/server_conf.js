@@ -6,23 +6,17 @@ if (sup_ext_newsletter == 'undefined' || !sup_ext_newsletter){
    var sup_ext_newsletter = {}
 }
 
-
 var test = {
-  'api': "http://127.0.0.1:5003/newsletter",
-  'auth_api': "http://127.0.0.1:5003/user",
-};
+  'api': 'http://ext.sup.farm/newsletter/server'
+}
 
 var dev = {
-  'api': "http://127.0.0.1:5003/newsletter",
-  'auth_api': "http://127.0.0.1:5003/user",
-};
+  'api': 'http://localhost:5003'
+}
 
 var prd = {
-  'api': "http://ext.soopro.com/newsletter/server/newsletter",
-  'auth_api': "http://ext.soopro.com/newsletter/server/user",
-};
-
+  'api': 'http://api.url4.cc'
+}
 
 sup_ext_newsletter.server = dev
-sup_ext_newsletter.cookie_domain = ".sup.local"
 sup_ext_newsletter.is_debug = true;

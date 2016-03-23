@@ -8,19 +8,18 @@ from apiresps.errors import AuthFailed
 
 def verify_token():
     ExtUser = current_app.mongodb_conn.ExtUser
-    
-    # fake data
-    
-    user = ExtUser.find_one()
-    if not user:
-        user = ExtUser()
-        user['scope'] = u'tester/testapp'
-        user['open_id'] = u'test-open-id'
-        user.save()
-    g.curr_user = user
-    
-    return
 
+    # fake data
+
+    # user = ExtUser.find_one()
+    # if not user:
+    #     user = ExtUser()
+    #     user['scope'] = u'tester/testapp'
+    #     user['open_id'] = u'test-open-id'
+    #     user.save()
+    # g.curr_user = user
+
+    # return
 
     open_id = current_app.sup_oauth.load_ext_token(request.headers)
 

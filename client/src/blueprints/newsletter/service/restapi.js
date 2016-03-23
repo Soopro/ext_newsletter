@@ -10,7 +10,7 @@ angular.module('newsletter')
   ){
     'use strict';
   
-    var api = Config.baseURL.api;
+    var api = Config.baseURL.api + '/newsletter';
     
 
     var res = {

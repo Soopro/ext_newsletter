@@ -22,3 +22,13 @@ class PostNotFound(NotFound):
 class MailFailed(InternalServerError):
     status_message = "SENDING_MAIL_FAILED"
     response_code = 400021
+
+
+class RoleGetFailed(InternalServerError):
+    status_message = "GETTING_ROLES_FAILED"
+    response_code = 400031
+
+
+class MemberGetFailed(InternalServerError):
+    status_message = "GETTING_MEMBERS_FAILED"
+    response_code = 400032

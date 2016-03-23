@@ -1,0 +1,20 @@
+{
+    "id": "newsletter-custom",
+    "alias" : "newsletter",
+    "author" : "Majik",
+    "title" : "Newsletter",
+    "poster": "poster.png",
+    "thumbnail": "thumbnail.png",
+    "previews": [],
+    "price" : 0,
+    "capabilities": ["ws", "wx", "wa", "wb"],
+    "description" : {
+      "en": "Make a unique forward URL for online promotion, it will also generate QR code automatically.",
+      "zh": "为线上推广之作独一无二的转发地址，它还会自动生成二维码。"
+    },
+    "published": false,
+    "domain":"sup.local:8888",
+    "protocol": "http",
+    "path": "/",
+    "entrance": "http://sup.local:8888/#/"
+}

@@ -16,7 +16,7 @@
   <div class="md-padding">
     <md-list>
       <md-subheader class="md-no-sticky">{{_('Posts')}}</md-subheader>
-      <div ng-repeat="item in forwards">
+      <div ng-repeat="item in posts">
         <md-list-item class="md-2-line">
           <div class="md-list-item-text" layout="column">
             <h3>{{ item.title }}</h3>
@@ -24,7 +24,7 @@
           </div>
           <div class="actions" layout="row" layout-align="end center">
               <md-button class="md-raised md-icon-button"
-               ng-href="open_post(post.id)" aria-label="{{_('Edit')}}">
+               ng-click="open_post(item.id)" aria-label="{{_('Edit')}}">
                 <md-icon md-svg-icon="ic_create_24px"></md-icon>
               </md-button>
           </div>

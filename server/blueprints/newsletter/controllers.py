@@ -62,7 +62,8 @@ def update_profile():
 def get_posts():
     posts = current_app.mongodb_conn.Post.\
         find_all_by_open_id(g.curr_user["open_id"])
-    return [output_post(post) for post in posts]
+    posts = [output_post(post) for post in posts]
+    return posts
 
 
 @output_json
@@ -140,20 +141,12 @@ def send_post(post_id):
     if not post:
         raise PostNotFound
 
-    members = []
-    for role_id in role_ids:
-        members.extends(_get_member_by_roles(role_id))
-
-    print "members:", members
-
     to = []
-    for member in members:
-        to.append(member.get('email'))
-    # get email addresses and send emails
-    # todo get emails from member ids
+    for role_id in role_ids:
+        to.extend(_get_member_by_roles(role_id))
 
-    _send_mail(post, profile, password, to)
-    # todo send history
+    if to:
+        _send_mail(post, profile, password, to)
 
     return output_post(post)
 
@@ -180,31 +173,94 @@ def send_test_post(post_id):
 
 
 @output_json
-def get_member_role():
-    # headers = {
-    #     "AppKey": current_app.config.get("APP_KEY"),
-    #     "AppSecret": current_app.config.get("APP_SECRET"),
-    #     "Authorization": "Bearer {}".format(
-    #         g.curr_user.get("access_token"))
-    # }
-    # get_member_role_url = current_app.config.get("ROLE_URL")
-    # resp = requests.get(get_member_role_url, headers=headers)
+def get_member_roles():
+    roles = current_app.mongodb_conn.Role.\
+        find_all_by_open_id(g.curr_user["open_id"])
 
-    return []
+    return [output_role(role) for role in roles]
 
 
-def _get_member_by_roles(role_id):
-    # headers = {
-    #     "AppKey": current_app.config.get("APP_KEY"),
-    #     "AppSecret": current_app.config.get("APP_SECRET"),
-    #     "Authorization": "Bearer {}".format(
-    #         g.curr_user.get("access_token"))
-    # }
-    # params = {"role_id": role_id}
-    # get_member_url = current_app.config.get("MEMBER_URL")
-    # resp = requests.get(get_member_url, headers=headers, params=params)
+@output_json
+def update_member_roles():
+    open_id = g.curr_user["open_id"]
 
-    return []
+    roles = _get_all_roles()
+    if roles and isinstance(roles, list):
+        Role = current_app.mongodb_conn.Role
+
+        local_roles = Role.find_all_by_open_id(open_id)
+        for role in local_roles:
+            role.delete()
+
+        for role in roles:
+            r = Role()
+            r["open_id"] = open_id
+            r["alias"] = role["alias"]
+            r["title"] = role["title"]
+            r.save()
+    else:
+        raise RoleGetFailed
+
+    members = _get_all_members()
+    Member = current_app.mongodb_conn.Member
+    for member in members:
+        m = Member.find_all_by_oid_and_login(open_id, login)
+        if not m:
+            m = Member()
+            m["open_id"] = open_id
+            m["login"] = member["login"]
+        m["name"] = member["login"]
+        m["email"] = member["email"]
+        m["mobile"] = member["mobile"]
+        m["avatar"] = member["avatar"]
+        m["role"] = member["role"]
+        m.save()
+
+    return output_role(roles)
+
+
+def _get_all_roles():
+    try:
+        roles = current_app.sup_oauth.get_roles(g.curr_user["access_token"])
+    except:
+        raise RoleGetFailed
+    return roles
+
+
+def _get_all_members():
+    offset = 0
+    members = []
+    while True:
+        member_list = _get_members(offset)
+        if not member_list:
+            break
+        members.extend(member_list)
+        offset += 1
+
+    return members
+
+
+def _get_members(offset, retry=0):
+    try:
+        members = current_app.sup_oauth.get_members(
+            g.curr_user["access_token"], offset=offset)
+    except:
+        if retry < 3:
+            members = _get(offset, retry+1)
+        else:
+            raise MemberGetFailed
+    return members
+
+
+def _get_member_email_by_roles(role):
+    members = current_app.mongodb_conn.Member.\
+        find_all_by_oid_and_role(g.curr_user["open_id"], role)
+    emails = []
+    for member in members:
+        email = member.get("email")
+        if email:
+            emails.append(member)
+    return emials
 
 
 def _send_mail(post, profile, password, to_email):
@@ -255,3 +311,21 @@ def output_post(post):
         "content": post["content"],
         "update_time": post["update_time"]
     }
+
+
+def output_role(role):
+    return {
+        "alias": role["alias"],
+        "title": role["title"],
+    }
+
+
+# def output_member(member):
+#     return {
+#         'login': member.get('login'),
+#         'name': member.get('name'),
+#         'email': member.get('email'),
+#         'mobile': member.get('mobile'),
+#         'avatar': member.get('avatar'),
+#         'role_id': member.get('role_id')
+#     }

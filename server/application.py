@@ -2,6 +2,8 @@
 from __future__ import absolute_import
 
 import traceback
+import logging
+from logging.handlers import RotatingFileHandler
 
 from flask import Flask, current_app, request
 from redis import Redis
@@ -32,6 +34,23 @@ def create_app(config_name='development'):
     # config
     app.config.from_object(config[config_name])
     app.json_encoder = Encoder
+
+    # logging
+    if app.config.get("TESTING") is True:
+        app.logger.setLevel(logging.FATAL)
+    else:
+        error_file_handler = RotatingFileHandler(
+            app.config.get("LOGGING")["error"]["file"],
+            maxBytes=app.config.get("LOGGING_ROTATING_MAX_BYTES"),
+            backupCount=app.config.get("LOGGING_ROTATING_BACKUP_COUNT")
+        )
+
+        error_file_handler.setLevel(logging.WARNING)
+        error_file_handler.setFormatter(
+            logging.Formatter(app.config.get('LOGGING')['error']['format'])
+        )
+
+        app.logger.addHandler(error_file_handler)
 
     # database connections
     app.mongodb_database = MongodbConn(

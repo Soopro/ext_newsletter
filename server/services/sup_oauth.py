@@ -103,7 +103,6 @@ class SupOAuth(object):
         }
         headers = self.DEFAULT_HEADERS
         try:
-            self.token_uri
             r = requests.post(self.token_uri,
                               data=json.dumps(payloads),
                               headers=headers)
@@ -177,7 +176,24 @@ class SupOAuth(object):
 
     def get_member(self, member_open_id, access_token):
         try:
-            url = '{}/crm/oauth/member/{}'.format(self.api_uri, member_open_id)
+            url = '{}/crm/oauth/member/{}'.format(self.api_uri,
+                                                  member_open_id)
+        except Exception as e:
+            raise self.OAuthInvalidParams(str(e))
+        return self.request('GET', url, access_token)
+
+    def get_members(self, access_token, role='', offset=0):
+        try:
+            url = '{}/crm/oauth/member?role={}&offset={}'.format(self.api_uri,
+                                                                 role,
+                                                                 offset)
+        except Exception as e:
+            raise self.OAuthInvalidParams(str(e))
+        return self.request('GET', url, access_token)
+
+    def get_roles(self, access_token):
+        try:
+            url = '{}/crm/oauth/role'.format(self.api_uri)
         except Exception as e:
             raise self.OAuthInvalidParams(str(e))
         return self.request('GET', url, access_token)

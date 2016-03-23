@@ -1,0 +1,71 @@
+<div layout="column">
+  <md-toolbar class="md-hue-3">
+    <div class="md-toolbar-tools">
+      <md-button class="md-icon-button" aria-label="{{_('Back')}}"
+       ng-click="jump_to('/newsletter/posts')">
+        <md-icon md-svg-icon="ic_arrow_back_24px"></md-icon>
+      </md-button>
+      <h2>
+        <span>{{ _('Send') }}</span>
+      </h2>
+      <span flex></span>
+      <p ng-if="!is_published">{{ _('Preview') }}</p>
+      <p ng-if="is_published">{{ _('Publish') }}</p>
+      <md-switch class="md-secondary" name="is_published" 
+       ng-model="is_published" aria-label="{{ _('Send For Test') }}">
+      </md-switch>
+      <ng-include src="'blueprints/newsletter/views/menu.tmpl.html'" 
+       ng-controller="menuCtrl"></ng-include>
+    </div>
+  </md-toolbar>
+  <div class="md-padding">
+    <form name="test_mail_form" layout="column" ng-if="!is_published"
+     novalidate ng-submit="send_test_post(test_email, test_password)">
+   
+      <md-input-container class="md-block">
+        <label>{{_('Test Email')}}</label>
+        <input name="test_email" ng-model="test_email" 
+         type="email" required></input>
+        <ng-messages for="test_mail_form.test_email.$error" role="alert">
+          <ng-message when="required">
+            {{ _('Test Email is required.') }}
+          </ng-message>
+          <ng-message when="email">
+            {{ _('Email, please! Just one.') }}
+          </ng-message>
+        </ng-messages>
+      </md-input-container>
+      
+      <md-input-container class="md-block">
+        <label>{{_('Password')}}</label>
+        <input name="password" ng-model="password" type="password"></input>
+      </md-input-container>
+  
+      <div layout="row">
+        <md-button class="md-raised md-primary" ng-disabled="is_sended">
+          {{_('Test Send')}}
+        </md-button>
+      </div>
+  
+    </form>
+    
+    <form name="mail_form" layout="column" ng-if="is_published"
+     novalidate ng-submit="send_post(roles, password)">
+   
+   
+   
+   
+      <md-input-container class="md-block">
+        <label>{{_('Password')}}</label>
+        <input name="password" ng-model="password" type="password"></input>
+      </md-input-container>
+    
+      <div layout="row">
+        <md-button class="md-raised md-primary" ng-disabled="is_sended">
+          {{_('Send')}}
+        </md-button>
+      </div>
+  
+    </form>
+  </div>
+</div>

@@ -28,6 +28,11 @@ angular.module('newsletter')
     .when('/' + bp + '/edit_post/:post_id', {
       templateUrl: dir + "/edit.html",
       controller: "postCtrl"
+    })
+    
+    .when('/' + bp + '/posts/:post_id/send', {
+      templateUrl: dir + "/send.html",
+      controller: "sendCtrl"
     });
   }
 ]);
