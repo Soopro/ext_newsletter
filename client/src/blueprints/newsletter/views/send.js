@@ -18,6 +18,9 @@ angular.module("newsletter")
     $scope.is_sended = false;
     $scope.password = '';
     
+    $scope.role_list = restNL.memberRoles.query();
+    console.log($scope.role_list)
+    
     $scope.send_test_post = function(email, password) {
       if (fsv($scope.test_mail_form, ['password', 'test_email'])){
         restNL.mailTest.send({
