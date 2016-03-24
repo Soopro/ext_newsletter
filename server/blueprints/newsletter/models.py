@@ -1,6 +1,6 @@
 # coding=utf-8
 from mongokit import Document, ObjectId
-from datetime import datetime
+from utils.helpers import now
 
 
 NewsletterDeactivated, NewsletterActivated = xrange(2)
@@ -13,7 +13,7 @@ class Post(Document):
         "open_id": unicode,
         "title": unicode,
         "content": unicode,
-        "update_time": datetime,
+        "update_time": int,
     }
 
     required_fields = [
@@ -23,7 +23,7 @@ class Post(Document):
         "update_time"
     ]
     default_values = {
-        "update_time": datetime.utcnow
+        "update_time": now
     }
 
     def find_all_by_open_id(self, open_id):

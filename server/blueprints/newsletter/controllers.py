@@ -5,7 +5,7 @@ from flask import current_app, g
 from .errors import *
 from utils.api_utils import output_json
 from utils.request import get_param
-from datetime import datetime
+from utils.helpers import now
 from services.mail import MailSender
 from apiresps.validations import Struct
 
@@ -106,7 +106,7 @@ def update_post(post_id):
 
     post["title"] = title
     post["content"] = content
-    post["update_time"] = datetime.utcnow()
+    post["update_time"] = now()
     post.save()
 
     return output_post(post)
