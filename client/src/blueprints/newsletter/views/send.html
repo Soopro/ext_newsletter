@@ -19,60 +19,70 @@
     </div>
   </md-toolbar>
   <div class="md-padding">
-    <form name="test_mail_form" layout="column" ng-if="!is_published"
-     novalidate ng-submit="send_test_post(test_email, test_password)">
-   
-      <md-input-container class="md-block">
-        <label>{{_('Test Email')}}</label>
-        <input name="test_email" ng-model="test_email" 
-         type="email" required></input>
-        <ng-messages for="test_mail_form.test_email.$error" role="alert">
-          <ng-message when="required">
-            {{ _('Test Email is required.') }}
-          </ng-message>
-          <ng-message when="email">
-            {{ _('Email, please! Just one.') }}
-          </ng-message>
-        </ng-messages>
-      </md-input-container>
-      
-      <md-input-container class="md-block">
-        <label>{{_('Password')}}</label>
-        <input name="password" ng-model="password" type="password"></input>
-      </md-input-container>
-  
-      <div layout="row">
-        <md-button class="md-raised md-primary" ng-disabled="is_sended">
-          {{_('Test Send')}}
-        </md-button>
-      </div>
-  
-    </form>
     
-    <form name="mail_form" layout="column" ng-if="is_published"
-     novalidate ng-submit="send_post(roles, password)">
+    <div ng-show="!is_published">
+      <form name="test_mail_form" layout="column" novalidate
+       ng-submit="send_test_post(test_email, password)">
    
-      <div layout="column" layout-align="center center">
-        <md-select placeholder="Assign to user" ng-model="user" 
-         md-on-open="loadUsers()" style="min-width: 200px;">
-          <md-option ng-value="user" ng-repeat="user in users">
-            {{user.name}}
+        <md-input-container class="md-block">
+          <label>{{_('Test Email')}}</label>
+          <input name="test_email" ng-model="test_email" 
+           type="email" required></input>
+          <ng-messages for="test_mail_form.test_email.$error" role="alert">
+            <ng-message when="required">
+              {{ _('Test Email is required.') }}
+            </ng-message>
+            <ng-message when="email">
+              {{ _('Email, please! Just one.') }}
+            </ng-message>
+          </ng-messages>
+        </md-input-container>
+      
+        <md-input-container class="md-block">
+          <label>{{_('Password')}}</label>
+          <input name="password" ng-model="password" type="password"></input>
+        </md-input-container>
+  
+        <div layout="row">
+          <md-button class="md-raised md-primary" type="submit"
+           ng-disabled="is_sended || is_updating">
+            {{_('Test Send')}}
+          </md-button>
+        </div>
+  
+      </form>
+    </div>
+    
+    <div ng-show="is_published">
+      <form name="mail_form" layout="column" novalidate
+      ng-submit="send_post(select_role, password)">
+     
+        <md-select name="select_role" placeholder="{{ _('Roles') }}" 
+         ng-model="select_role" md-on-open="loadRoles()" 
+         style="min-width: 200px;">
+          <md-option ng-value="role" ng-repeat="item in roles">
+            {{item.title}}
           </md-option>
         </md-select>
-      </div>
-   
-   
-      <md-input-container class="md-block">
-        <label>{{_('Password')}}</label>
-        <input name="password" ng-model="password" type="password"></input>
-      </md-input-container>
+
+        <md-input-container class="md-block">
+          <label>{{_('Password')}}</label>
+          <input name="password" ng-model="password" type="password"></input>
+        </md-input-container>
     
-      <div layout="row">
-        <md-button class="md-raised md-primary" ng-disabled="is_sended">
-          {{_('Send')}}
-        </md-button>
-      </div>
+        <div layout="row">
+          <md-button class="md-raised md-primary" type="submit"
+           ng-disabled="is_sended || is_updating">
+            {{_('Send')}}
+          </md-button>
+          <md-button class="md-raised" type="button" ng-click="update_roles()"
+           ng-disabled="is_sended || is_updating">
+            {{_('Update Roles')}}
+          </md-button>
+        </div>
   
-    </form>
+      </form>
+    </div>
+    
   </div>
 </div>

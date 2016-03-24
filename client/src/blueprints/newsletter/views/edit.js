@@ -8,6 +8,7 @@ angular.module("newsletter")
   "$routeParams", 
   "$location", 
   "$mdDialog",
+  "extManager",
   "fsv",
   
   function(
@@ -18,6 +19,7 @@ angular.module("newsletter")
     $routeParams, 
     $location,
     $mdDialog,
+    extManager,
     fsv
   ) {
     var post_id = $routeParams.post_id;
@@ -35,8 +37,9 @@ angular.module("newsletter")
     
     $scope.save_post = function() {
       if (fsv($scope.post_form, ['title', 'content'])){
+        $scope.is_submitted = true;
         $scope.post.$save({post_id: $scope.post.id}).then(function(data){
-          $scope.is_submitted = true;
+          extManager.flash('Post has been saved.');
           if($scope.is_new){
             $location.path("/newsletter/edit_post/" + data.id);
           }
@@ -47,12 +50,17 @@ angular.module("newsletter")
     };
     
     $scope.delete_post = function() {
-      $scope.post.$delete({post_id: $scope.post.id});
-      $location.path("/newsletter/posts");
+      $scope.is_submitted = true;
+      $scope.post.$delete({post_id: $scope.post.id}).then(function(data){
+        extManager.flash('Post has been saved.');
+        $location.path("/newsletter/posts");
+      }).finally(function(){
+        $scope.is_submitted = false;
+      });
+      
     };
     
     $scope.jump_to = function(route){
-      console.log("jump to:" + route);
       $location.path(route);
     };
 

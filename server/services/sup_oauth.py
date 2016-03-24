@@ -154,7 +154,7 @@ class SupOAuth(object):
         try:
             r = requests.request(method, url, **kwargs)
             result = r.json()
-            assert isinstance(result, dict)
+            assert isinstance(result, dict) or isinstance(result, list)
             assert r.status_code < 400
         except Exception as e:
             if r.status_code == 401:

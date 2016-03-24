@@ -128,7 +128,7 @@ def delete_post(post_id):
 @output_json
 def send_post(post_id):
     Struct.ObjectId(post_id)
-    role_ids = get_param('selected_roles', Struct.ObjectId, required=True)
+    roles = get_param('selected_roles', Struct.ObjectId, required=True)
     password = get_param('password', Struct.Pwd, required=True)
 
     profile = current_app.mongodb_conn.Profile.\
@@ -142,8 +142,8 @@ def send_post(post_id):
         raise PostNotFound
 
     to = []
-    for role_id in role_ids:
-        to.extend(_get_member_by_roles(role_id))
+    for role in roles:
+        to.extend(_get_member_email_by_role(role))
 
     if to:
         _send_mail(post, profile, password, to)
@@ -185,7 +185,8 @@ def update_member_roles():
     open_id = g.curr_user["open_id"]
 
     roles = _get_all_roles()
-    if roles and isinstance(roles, list):
+    # print roles
+    if isinstance(roles, list):
         Role = current_app.mongodb_conn.Role
 
         local_roles = Role.find_all_by_open_id(open_id)
@@ -202,6 +203,7 @@ def update_member_roles():
         raise RoleGetFailed
 
     members = _get_all_members()
+    # print members
     Member = current_app.mongodb_conn.Member
     for member in members:
         m = Member.find_all_by_oid_and_login(open_id, login)
@@ -216,7 +218,9 @@ def update_member_roles():
         m["role"] = member["role"]
         m.save()
 
-    return output_role(roles)
+    return {
+        "roles": [output_role(role) for role in roles]
+    }
 
 
 def _get_all_roles():
@@ -229,13 +233,15 @@ def _get_all_roles():
 
 def _get_all_members():
     offset = 0
+    ONCE_AMOUNT = 100
     members = []
+
     while True:
         member_list = _get_members(offset)
         if not member_list:
             break
         members.extend(member_list)
-        offset += 1
+        offset += ONCE_AMOUNT
 
     return members
 
@@ -252,7 +258,7 @@ def _get_members(offset, retry=0):
     return members
 
 
-def _get_member_email_by_roles(role):
+def _get_member_email_by_role(role):
     members = current_app.mongodb_conn.Member.\
         find_all_by_oid_and_role(g.curr_user["open_id"], role)
     emails = []

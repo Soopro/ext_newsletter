@@ -7,12 +7,12 @@ from apiresps.errors import (AuthFailed,
                              NotFound)
 
 
-class RequestAccessTokenFailed(AuthFailed):
+class RequestAccessTokenFailed(PermissionDenied):
     status_message = "REQUEST_ACCESS_TOKEN_FAILED"
     response_code = 300001
 
 
-class RefreshAccessTokenFailed(AuthFailed):
+class RefreshAccessTokenFailed(PermissionDenied):
     status_message = "REFRESH_ACCESS_TOKEN_FAILED"
     response_code = 300002
 

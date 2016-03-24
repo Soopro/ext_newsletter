@@ -18,12 +18,12 @@
      novalidate ng-submit="save_profile()">
       
       <md-input-container>
-        <label>{{_('Host')}}</label>
+        <label>{{_('SMTP')}}</label>
         <input name="host" ng-model="profile.host"
          ng-pattern="/^smtp(\.\w+){2,}$/" required></input>
         <ng-messages for="profile_form.host.$error" role="alert">
           <ng-message when="required">
-            {{ _('Host is required.') }}
+            {{ _('SMTP server is required.') }}
           </ng-message>
           <ng-message when="pattern">
             {{ _('This is not a SMTP server!') }}
@@ -63,11 +63,11 @@
       
       <div layout="row">
         <md-button class="md-raised md-primary" type="submit"
-         ng-disabled="submitted">
+         ng-disabled="is_saved">
           {{_('Save')}}
         </md-button>
         <md-button class="md-raised" type="button"
-         ng-click="jump_to('/dashboard')" ng-disabled="submitted">
+         ng-click="jump_to('/dashboard')" ng-disabled="is_saved">
           {{_('Cancel')}}
         </md-button>
       </div>

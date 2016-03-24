@@ -6,15 +6,18 @@ angular.module("newsletter")
   "$route", 
   "$location", 
   "restNL", 
+  "extManager",
+  
   function(
     $rootScope, 
     $scope, 
     $route, 
     $location, 
-    restNL
+    restNL,
+    extManager
   ) {
     $scope.posts = restNL.posts.query();
-    console.log($scope.posts)
+    
     $scope.open_post = function(post_id) {
       $location.path("/newsletter/edit_post/" + post_id);
     };
