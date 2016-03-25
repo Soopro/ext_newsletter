@@ -22,14 +22,14 @@ class Config(object):
 
     EXPIRES_IN = timedelta(seconds=3600 * 24 * 30)
 
-    OAUTH_API_URI = 'http://api.soopro.com'
+    OAUTH_API_URI = 'http://127.0.0.1:5000'
     OAUTH_TOKEN_API_URI = '{}/oauth/token'.format(OAUTH_API_URI)
     OAUTH_REDIRECT_URI = 'http://sup.local:8888/#/auth/redirect'
 
     CURL_BASE_URL = 'http://localhost:5003/newsletter'
 
-    MEMBER_URL = "http://api.soopro.com/crm/member"
-    ROLE_URL = "http://api.soopro.com/crm/role"
+    MEMBER_URL = "{}/crm/member".format(OAUTH_API_URI)
+    ROLE_URL = "{}/crm/role".format(OAUTH_API_URI)
 
     # logging
     LOG_FOLDER = os.path.join(BASE_DIR, 'deploy')

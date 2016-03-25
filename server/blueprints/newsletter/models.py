@@ -151,8 +151,8 @@ class Member(Document):
             "role": role
         })
 
-    def find_all_by_oid_and_login(self, open_id, login):
-        return self.find({
+    def find_one_by_oid_and_login(self, open_id, login):
+        return self.find_one({
             "open_id": open_id,
             "login": login
         })

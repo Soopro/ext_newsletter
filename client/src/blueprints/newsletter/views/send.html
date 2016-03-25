@@ -2,81 +2,84 @@
   <md-toolbar class="md-hue-3">
     <div class="md-toolbar-tools">
       <md-button class="md-icon-button" aria-label="{{_('Back')}}"
-       ng-click="jump_to('/newsletter/posts')">
+       ng-click="jump_to('/newsletter/edit_post/' + post_id)">
         <md-icon md-svg-icon="ic_arrow_back_24px"></md-icon>
       </md-button>
       <h2>
         <span>{{ _('Send') }}</span>
       </h2>
       <span flex></span>
-      <p ng-if="!is_published">{{ _('Preview') }}</p>
-      <p ng-if="is_published">{{ _('Publish') }}</p>
-      <md-switch class="md-secondary" name="is_published" 
-       ng-model="is_published" aria-label="{{ _('Send For Test') }}">
-      </md-switch>
       <ng-include src="'blueprints/newsletter/views/menu.tmpl.html'" 
        ng-controller="menuCtrl"></ng-include>
     </div>
   </md-toolbar>
   <div class="md-padding">
     
-    <div ng-show="!is_published">
-      <form name="test_mail_form" layout="column" novalidate
-       ng-submit="send_test_post(test_email, password)">
+    <div>
+      <form name="mail_form" layout="column"
+       novalidate ng-submit="send()">
    
-        <md-input-container class="md-block">
-          <label>{{_('Test Email')}}</label>
-          <input name="test_email" ng-model="test_email" 
-           type="email" required></input>
-          <ng-messages for="test_mail_form.test_email.$error" role="alert">
-            <ng-message when="required">
-              {{ _('Test Email is required.') }}
-            </ng-message>
-            <ng-message when="email">
-              {{ _('Email, please! Just one.') }}
-            </ng-message>
-          </ng-messages>
-        </md-input-container>
-      
-        <md-input-container class="md-block">
-          <label>{{_('Password')}}</label>
-          <input name="password" ng-model="password" type="password"></input>
-        </md-input-container>
-  
-        <div layout="row">
-          <md-button class="md-raised md-primary" type="submit"
-           ng-disabled="is_sended || is_updating">
-            {{_('Test Send')}}
-          </md-button>
+        <div layout-gt-xs="row" layout-align="start start">
+          <div flex-gt-xs="30" class="md-padding input-row" layout="row">
+            <md-input-container flex>
+              <md-select flex-order="2" name="send_func" 
+               ng-model="selected_func" placeholder="{{ _('Send Func') }}">
+                <md-option ng-value="item" ng-repeat="item in send_func">
+                  {{ _( item.name ) }}
+                </md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+          
+          <div flex class="md-padding" layout="row">
+            <md-input-container flex ng-show="selected_func.is_published">
+              <label>{{_('Test Email')}}</label>
+              <md-select flex name="selected_role"
+               placeholder="{{ _('Roles') }}" 
+               ng-model="selected_role" md-on-open="loadRoles()">
+                <md-option ng-value="item" ng-repeat="item in roles">
+                  {{ item.title }}
+                </md-option>
+              </md-select>
+            </md-input-container>
+          
+            <md-input-container flex ng-show="!selected_func.is_published">
+              <label>{{_('Test Email')}}</label>
+              <input name="test_email" ng-model="test_email" 
+               type="email" required></input>
+              <ng-messages for="mail_form.test_email.$error" role="alert">
+                <ng-message when="required">
+                  {{ _('Test Email is required.') }}
+                </ng-message>
+                <ng-message when="email">
+                  {{ _('Email, please! Just one.') }}
+                </ng-message>
+              </ng-messages>
+            </md-input-container>
+          </div>
+        </div>
+        
+        <div class="md-padding">
+          <md-input-container class="md-block">
+            <label>{{_('Password')}}</label>
+            <input name="password" ng-model="password"
+             type="password" required></input>
+            <ng-messages for="mail_form.password.$error" role="alert">
+              <ng-message when="required">
+                {{ _('Password is required.') }}
+              </ng-message>
+            </ng-messages>
+          </md-input-container>
         </div>
   
-      </form>
-    </div>
-    
-    <div ng-show="is_published">
-      <form name="mail_form" layout="column" novalidate
-      ng-submit="send_post(select_role, password)">
-     
-        <md-select name="select_role" placeholder="{{ _('Roles') }}" 
-         ng-model="select_role" md-on-open="loadRoles()" 
-         style="min-width: 200px;">
-          <md-option ng-value="role" ng-repeat="item in roles">
-            {{item.title}}
-          </md-option>
-        </md-select>
-
-        <md-input-container class="md-block">
-          <label>{{_('Password')}}</label>
-          <input name="password" ng-model="password" type="password"></input>
-        </md-input-container>
-    
         <div layout="row">
           <md-button class="md-raised md-primary" type="submit"
            ng-disabled="is_sended || is_updating">
             {{_('Send')}}
           </md-button>
           <md-button class="md-raised" type="button" ng-click="update_roles()"
-           ng-disabled="is_sended || is_updating">
+           ng-disabled="is_sended || is_updating" 
+           ng-if="selected_func.is_published">
             {{_('Update Roles')}}
           </md-button>
         </div>

@@ -18,13 +18,14 @@ angular.module("newsletter")
     extManager,
     fsv
   ) {
-    var post_id = $routeParams.post_id;
+    
+    $scope.post_id = $routeParams.post_id;
     var all_roles = {alias: 'all', title: 'Send To All'}
     var role_list;
     
     function init(){
       role_list = restNL.memberRoles.query();
-      $scope.select_role = all_roles;
+      $scope.selected_role = all_roles;
       $scope.roles = null;
     };
     init();
@@ -46,15 +47,36 @@ angular.module("newsletter")
     
     
     $scope.is_updating = false;
-    $scope.is_published = false;
     $scope.is_sended = false;
     $scope.password = '';
+    $scope.test_email = '';
     
-    $scope.send_test_post = function(email, password) {
-      if (fsv($scope.test_mail_form, ['password', 'test_email'])){
+    $scope.send_func = [
+      {
+        name: "Send Test Post",
+        is_published: false
+      },
+      {
+        name: "Send Post by Role",
+        is_published: true
+      },
+    ];
+    
+    $scope.selected_func = $scope.send_func[0];
+    
+    $scope.send = function(){
+      if($scope.selected_func.is_published){
+        send_post($scope.selected_role, $scope.password);
+      } else {
+        send_test_post($scope.test_email, $scope.password);
+      }
+    };
+    
+    var send_test_post = function(email, password) {
+      if (fsv($scope.mail_form, ['test_email', 'password'])){
         $scope.is_sended = true;
         restNL.mailTest.send({
-          post_id: post_id
+          post_id: $scope.post_id
         }, {
           test_mail: email,
           password: password
@@ -66,10 +88,10 @@ angular.module("newsletter")
       }
     };
     
-    $scope.send_post = function(roles, password) {
-      if (fsv($scope.test_mail_form, ['password', 'select_role'])){
+    var send_post = function(roles, password) {
+      if (fsv($scope.mail_form, ['password'])){
         var selected_roles;
-        if ($scope.selected_role.alias === "all"){
+        if (roles.alias === "all"){
           selected_roles = (function() {
             var _i, _results;
             _results = [];
@@ -79,12 +101,13 @@ angular.module("newsletter")
             return _results;
           })();
         } else {
-          selected_roles = [$scope.selected_role.alias];
+          selected_roles = [roles.alias];
         }
-        
+      
+      
         $scope.is_sended = true;
         restNL.mail.send({
-          post_id: post_id
+          post_id: $scope.post_id
         }, {
           selected_roles: selected_roles,
           password: $scope.password
@@ -99,6 +122,7 @@ angular.module("newsletter")
     $scope.update_roles = function(){
       $scope.is_updating = true;
       restNL.memberRoles.post().$promise.then(function(data){
+        extManager.flash('Roles have refreshed.')
         init();
       }).finally(function(){
         $scope.is_updating = false;

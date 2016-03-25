@@ -128,7 +128,7 @@ def delete_post(post_id):
 @output_json
 def send_post(post_id):
     Struct.ObjectId(post_id)
-    roles = get_param('selected_roles', Struct.ObjectId, required=True)
+    roles = get_param('selected_roles', Struct.List, required=True)
     password = get_param('password', Struct.Pwd, required=True)
 
     profile = current_app.mongodb_conn.Profile.\
@@ -206,7 +206,7 @@ def update_member_roles():
     # print members
     Member = current_app.mongodb_conn.Member
     for member in members:
-        m = Member.find_all_by_oid_and_login(open_id, login)
+        m = Member.find_one_by_oid_and_login(open_id, member["login"])
         if not m:
             m = Member()
             m["open_id"] = open_id
@@ -252,7 +252,7 @@ def _get_members(offset, retry=0):
             g.curr_user["access_token"], offset=offset)
     except:
         if retry < 3:
-            members = _get(offset, retry+1)
+            members = _get_members(offset, retry+1)
         else:
             raise MemberGetFailed
     return members
@@ -266,7 +266,7 @@ def _get_member_email_by_role(role):
         email = member.get("email")
         if email:
             emails.append(member)
-    return emials
+    return emails
 
 
 def _send_mail(post, profile, password, to_email):

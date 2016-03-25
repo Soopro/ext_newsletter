@@ -183,3 +183,24 @@ md-divider.dotted {
 .view.ng-enter.ng-enter-active {
   opacity: 1;
 }
+
+.input-row {
+  padding-bottom: 26px;
+  md-input-container {
+    padding-bottom: 2px;
+  }
+  md-input-container md-select{
+    padding: 2px;
+    padding-bottom: 0;
+    line-height: 28px;
+  }
+  md-input-container .md-input:first-child {
+    padding-top: 8px;
+  }
+  .icon-input md-input-container{
+    margin-right: 0;
+  }
+  .icon-input md-icon{
+    margin-right: 8px;
+  }
+}

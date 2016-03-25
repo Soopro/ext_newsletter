@@ -53,6 +53,7 @@ def get_oauth_access_token(open_id):
 
     try:
         resp = current_app.sup_oauth.get_access_token(code)
+        print resp
         assert 'access_token' in resp
     except Exception as e:
         raise RequestAccessTokenFailed('access')

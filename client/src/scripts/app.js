@@ -14,6 +14,6 @@ angular.module("newsletter", [
 angular.module('newsletter')
 
 .constant('App', {
-  version: '1.0.2',
+  version: '1.1.0',
   artisan: ['Majik', 'Redyyu']
 })

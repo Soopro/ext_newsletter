@@ -126,5 +126,17 @@ sup.localizedDict['zh_CN'] = [
   {
     'msgid': 'Email, please! Just one.',
     'msgstr': '此处只能填写一个正确的 email 地址。',
-  }
+  },
+  {
+    'msgid': 'Send Test Post',
+    'msgstr': '发送预览',
+  },
+  {
+    'msgid': 'Send Post by Role',
+    'msgstr': '群发',
+  },
+  {
+    'msgid': 'Password is required.',
+    'msgstr': '密码！',
+  },
 ]
