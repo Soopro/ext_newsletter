@@ -9,12 +9,12 @@
     "price" : 0,
     "capabilities": ["ws", "wx", "wa", "wb"],
     "description" : {
-      "en": "Make a unique forward URL for online promotion, it will also generate QR code automatically.",
-      "zh": "为线上推广之作独一无二的转发地址，它还会自动生成二维码。"
+      "en": "Promotion among members by emails.",
+      "zh": "通过电子邮件，推广可靠的产品给会员。"
     },
     "published": false,
-    "domain":"manage.url4.cc",
+    "domain":"ext.soopro.net",
     "protocol": "http",
     "path": "",
-    "entrance": "http://manage.url4.cc/#/"
+    "entrance": "http://ext.soopro.net/newsletter/client/#/"
 }

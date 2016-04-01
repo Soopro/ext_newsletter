@@ -1,15 +1,25 @@
 server{
   listen 80;
-  server_name ext.soopro.com
+  server_name url4.cc www.url4.cc;
 
   index           index.html;
-	
-	location /newsletter/server/ {
-    proxy_pass http://127.0.0.1:5001
-  }
   
-  location /newsletter/client/ {
-    root /var/www/ext_newsletter/client/app;
+  location {
+    root /var/www/ext_url4/client/dist;
   }
-  
+
+}
+
+server{
+  listen 80;
+  server_name api.url4.cc;
+
+  client_max_body_size 20M;
+
+	location / {
+    proxy_pass http://127.0.0.1:6002;
+		proxy_set_header Host            $http_host;
+    proxy_set_header X-Real-IP       $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	}  
 }
