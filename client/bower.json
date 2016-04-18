@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "homepage": "https://github.com/Soopro/sup_extensions",
   "authors": [
-    "Eric Yang <windfarer@gmail.com>"
+    "Eric Yang <windfarer@gmail.com>",
+    "majik <mumu296979387@gmail.com>"
   ],
   "description": "Newsletter extension of Soopro.",
   "license": "MIT",

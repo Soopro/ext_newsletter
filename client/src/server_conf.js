@@ -1,5 +1,5 @@
 /* -------------------------------
- * Server Conf: sup ext newsletter 
+ * Server Conf: sup ext newsletter
 /* ------------------------------- */
 
 if (sup_ext_newsletter == 'undefined' || !sup_ext_newsletter){
@@ -15,7 +15,7 @@ var dev = {
 }
 
 var prd = {
-  'api': 'http://api.url4.cc'
+  'api': 'http://api-nl.exts.soopro.net'
 }
 
 sup_ext_newsletter.server = dev
