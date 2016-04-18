@@ -18,5 +18,5 @@ var prd = {
   'api': 'http://api-nl.exts.soopro.net'
 }
 
-sup_ext_newsletter.server = dev
+sup_ext_newsletter.server = dev;
 sup_ext_newsletter.is_debug = true;

@@ -103,6 +103,9 @@ class SupOAuth(object):
         }
         headers = self.DEFAULT_HEADERS
         try:
+            print self.token_uri
+            print payloads
+            print headers
             r = requests.post(self.token_uri,
                               data=json.dumps(payloads),
                               headers=headers)

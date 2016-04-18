@@ -22,7 +22,9 @@ angular.module('newsletter')
 
     var open_id = $routeParams.open_id || Auth.get_open_id();
     var oauth_page_uri = $routeParams.oauth_page_uri || Auth.get_oauth_page();
-    
+
+    console.log(open_id);
+
     if (!open_id || typeof(open_id) != 'string'){
       console.error('Open id is required!')
       $location.path(Config.route.error)
@@ -32,14 +34,14 @@ angular.module('newsletter')
     // get remote redirect info from ext server.
     function get_token (open_id) {
       if (open_id) {
-        
+
         Auth.set_open_id(open_id);
         Auth.set_oauth_page(oauth_page_uri);
 
         var auth = new restUser.auth({
           open_id: open_id
         })
-        
+
         auth.$get()
         .then(function (data) {
           if (data.state) {
@@ -63,7 +65,7 @@ angular.module('newsletter')
 				})
       }
     };
-    
+
     // get current token from cookie
     var ext_token = Auth.get_token();
     if (!ext_token) {

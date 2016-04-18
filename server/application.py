@@ -8,6 +8,7 @@ from logging.handlers import RotatingFileHandler
 from flask import Flask, current_app, request
 from mongokit import Connection as MongodbConn
 
+from envs import CONFIG_NAME
 from config import config
 from utils.encoders import Encoder
 from utils.api_utils import make_json_response, make_cors_headers
@@ -25,6 +26,8 @@ __artisan__ = ['Majik']
 
 
 def create_app(config_name='development'):
+    config_name = CONFIG_NAME or config_name
+
     app = Flask(__name__)
 
     app.version = __version__
