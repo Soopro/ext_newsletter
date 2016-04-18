@@ -1,5 +1,5 @@
 {
-    "id": "newsletter-custom",
+    "id": "newsletter",
     "alias" : "newsletter",
     "author" : "Majik",
     "title" : "Newsletter",
@@ -13,8 +13,8 @@
       "zh": "通过电子邮件，推广可靠的产品给会员。"
     },
     "published": false,
-    "domain":"ext.soopro.net",
+    "domain":"nl.exts.soopro.net",
     "protocol": "http",
     "path": "",
-    "entrance": "http://ext.soopro.net/newsletter/client/#/"
+    "entrance": "http://nl.exts.soopro.net"
 }

@@ -70,8 +70,8 @@ class ProductionConfig(Config):
     DEBUG = False
     DB_DBNAME = 'ext_newsletter_prd'
 
-    EXT_KEY = 'newsletter-custom'
-    EXT_SECRET = 'newsletter-custom-2016'
+    EXT_KEY = 'newsletter-1460982185'
+    EXT_SECRET = '7d791048-7506-45e4-84f3-aab3172e083c'
 
     OAUTH_API_URI = 'http://api.soopro.com'
     OAUTH_TOKEN_API_URI = '{}/oauth/token'.format(OAUTH_API_URI)
