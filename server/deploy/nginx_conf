@@ -4,8 +4,8 @@ server{
 
   index           index.html;
 
-  location {
-    root /var/www/ext_newsletter/client/dist;
+  location / {
+    root /var/www/ext_newsletter/client/dist/;
   }
 
 }
